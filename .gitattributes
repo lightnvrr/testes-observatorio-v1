@@ -1,0 +1,3 @@
+# Fixtures de teste ficam byte a byte (codificação e quebras de linha fazem parte do teste)
+tests/fixtures/** -text
+*.pdf binary

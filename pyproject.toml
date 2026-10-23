@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lattes-katienet"
+version = "0.1.0"
+description = "Pipeline da base Lattes do KatieNet / Observatório de Mulheres na Ciência (UFAL)"
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Por padrão roda só os unitários. `pytest -m dados` ou `pytest -m rede`
+# sobrescreve este filtro, pois o -m da linha de comando vem depois.
+addopts = "-m 'not dados and not rede'"
+markers = [
+    "dados: testes que exigem os arquivos brutos em data/raw/",
+    "rede: testes que acessam o painel do CNPq pela internet",
+]

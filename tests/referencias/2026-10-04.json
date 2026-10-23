@@ -1,0 +1,40 @@
+{
+  "data_extracao": "2026-10-04",
+  "data_extracao_original": "10/4/2026",
+  "conferido_por": null,
+  "notas": [
+    "Gerado na Fase 1 e a conferir pela responsável; preencher conferido_por depois.",
+    "n_pessoas: soma de TOTALPESSOAS por ANOOBTENCAOTITULO no extrato .hyper da fonte de download do workbook PainelLattes-FormaoeAtuao (Tableau Public, publicado em 2026-10-09). Fonte independente do CSV.",
+    "n_linhas: linhas do CSV exportado pela aba Painel - Download. Depende das colunas da view."
+  ],
+  "anos": {
+    "2020": {
+      "n_linhas": 52691,
+      "n_pessoas": 53178
+    },
+    "2021": {
+      "n_linhas": 61910,
+      "n_pessoas": 62739
+    },
+    "2022": {
+      "n_linhas": 70264,
+      "n_pessoas": 71359
+    },
+    "2023": {
+      "n_linhas": 81473,
+      "n_pessoas": 82976
+    },
+    "2024": {
+      "n_linhas": 80170,
+      "n_pessoas": 81923
+    },
+    "2025": {
+      "n_linhas": 76065,
+      "n_pessoas": 78130
+    },
+    "2026": {
+      "n_linhas": 44414,
+      "n_pessoas": 45434
+    }
+  }
+}
