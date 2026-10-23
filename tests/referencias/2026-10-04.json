@@ -5,7 +5,8 @@
   "notas": [
     "Gerado na Fase 1 e a conferir pela responsável; preencher conferido_por depois.",
     "n_pessoas: soma de TOTALPESSOAS por ANOOBTENCAOTITULO no extrato .hyper da fonte de download do workbook PainelLattes-FormaoeAtuao (Tableau Public, publicado em 2026-10-09). Fonte independente do CSV.",
-    "n_linhas: linhas do CSV exportado pela aba Painel - Download. Depende das colunas da view."
+    "n_linhas: linhas do CSV exportado pela aba Painel - Download. Depende das colunas da view.",
+    "dominios: valores distintos do consolidado 2020 a 2025 desta extração (gerado na Fase 4, a conferir)."
   ],
   "anos": {
     "2020": {
@@ -36,5 +37,77 @@
       "n_linhas": 44414,
       "n_pessoas": 45434
     }
+  },
+  "dominios": {
+    "Sexo": [
+      "Feminino",
+      "Masculino",
+      "Não declarado"
+    ],
+    "Cor ou Raça": [
+      "Amarela",
+      "Branca",
+      "Indígena",
+      "Não desejo declarar",
+      "Parda",
+      "Preta"
+    ],
+    "Grande Área (Formação)": [
+      "Ciências Agrárias",
+      "Ciências Biológicas",
+      "Ciências Exatas e da Terra",
+      "Ciências Humanas",
+      "Ciências Sociais Aplicadas",
+      "Ciências da Saúde",
+      "Engenharias",
+      "Lingüística, Letras e Artes",
+      "Não informado",
+      "Outra",
+      "Tecnologias"
+    ],
+    "Grande Área (Atuação)": [
+      "Ciências Agrárias",
+      "Ciências Biológicas",
+      "Ciências Exatas e da Terra",
+      "Ciências Humanas",
+      "Ciências Sociais Aplicadas",
+      "Ciências da Saúde",
+      "Engenharias",
+      "Lingüística, Letras e Artes",
+      "Não informado",
+      "Outra",
+      "Serviço Social",
+      "Tecnologias"
+    ],
+    "Nível (Formação)": [
+      "Doutorado",
+      "Mestrado",
+      "Mestrado Profissional"
+    ],
+    "Setor de Atividade (Atuação)": [
+      "Ensino Superior",
+      "Ensino Técnico/Prof. e de 2º Grau",
+      "Não informado",
+      "Setor Empresarial",
+      "Setor Exterior",
+      "Setor Governamental",
+      "Setor Privado sem Fins Lucrativos"
+    ],
+    "Região (Formação)": [
+      "Centro-Oeste",
+      "Nordeste",
+      "Norte",
+      "Não informado",
+      "Sudeste",
+      "Sul"
+    ],
+    "Região (Atuação)": [
+      "Centro-Oeste",
+      "Nordeste",
+      "Norte",
+      "Não informado",
+      "Sudeste",
+      "Sul"
+    ]
   }
 }

@@ -248,8 +248,19 @@ def gerar_indicadores(
 
 # ── Relatório de qualidade (para a metodologia, não para o público) ──────────
 
-def gerar_qualidade(df: pd.DataFrame, anos: list[int] = config.ANOS) -> pd.DataFrame:
-    """Taxas de "Não informado", sexo não declarado e raça no grupo de sexo não declarado."""
+def gerar_qualidade(
+    df: pd.DataFrame,
+    anos: list[int] = config.ANOS,
+    bolsas: pd.DataFrame | None = None,
+) -> pd.DataFrame:
+    """Verificações de qualidade para a metodologia (não são indicadores públicos).
+
+    - taxa_nao_informado: por campo, recorte, período e sexo;
+    - sexo_nao_declarado e distribuição de raça nesse grupo (comparada ao sexo declarado);
+    - distribuicao_grande_area: pessoas por grande área de formação e de atuação no período;
+    - bolsa_ja_recebida (se `bolsas` for dado): % de pessoas com bolsa = "Sim", por nível e
+      sexo. `bolsas` são colunas dos brutos que não estão no consolidado.
+    """
     df = preparar(df)
     agregado = rotulo_agregado(anos)
     linhas = []
@@ -290,6 +301,26 @@ def gerar_qualidade(df: pd.DataFrame, anos: list[int] = config.ANOS) -> pd.DataF
                 add(verificacao, RACA, "geral", periodo,
                     config.SEXO_NAO_DECLARADO if verificacao.endswith("nao_declarado") else TODOS,
                     raca, grupo.loc[grupo[RACA] == raca, _PESSOAS].sum(), grupo[_PESSOAS].sum())
+
+    # Grandes áreas no período (mostra categorias fora da Árvore, como "Tecnologias")
+    declarados = df[df[SEXO].isin([F, M])]
+    for campo in (GA_FORMACAO, GA_ATUACAO):
+        for valor, pessoas in declarados.groupby(campo)[_PESSOAS].sum().items():
+            add("distribuicao_grande_area", campo, "geral", agregado, TODOS, valor,
+                pessoas, declarados[_PESSOAS].sum())
+
+    if bolsas is not None:
+        bolsas = preparar(bolsas)
+        bolsas = bolsas[bolsas[SEXO].isin([F, M])]
+        grupos_nivel = [("geral", "Todos os níveis", bolsas)]
+        grupos_nivel += [("nivel_formacao", n, bolsas[bolsas[config.COLUNA_NIVEL] == n])
+                         for n in config.NIVEIS_FORMACAO]
+        for campo in config.COLUNAS_BOLSAS_QUALIDADE:
+            for recorte, categoria, sub in grupos_nivel:
+                for sexo, sexos in ((F, [F]), (M, [M]), (TODOS, [F, M])):
+                    s = sub[sub[SEXO].isin(sexos)]
+                    add("bolsa_ja_recebida", campo, recorte, agregado, sexo, categoria,
+                        s.loc[s[campo] == config.BOLSA_SIM, _PESSOAS].sum(), s[_PESSOAS].sum())
 
     return pd.DataFrame(linhas, columns=COLUNAS_QUALIDADE)
 

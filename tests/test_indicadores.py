@@ -229,6 +229,32 @@ def test_qualidade_taxa_nao_informado_e_sexo_nao_declarado():
     assert (preta_nd.numerador, preta_nd.denominador) == (1, 1)
 
 
+def test_qualidade_distribuicao_de_grande_area():
+    q = ind.gerar_qualidade(base_mini(), ANOS)
+    dist = q[(q.verificacao == "distribuicao_grande_area") & (q.campo == "Grande Área (Formação)")]
+    # 17 pessoas com sexo declarado: Engenharias 13, Exatas 1, Humanas 3
+    assert dist.set_index("categoria").numerador.to_dict() == {ENG: 13, EXATAS: 1, HUM: 3}
+    assert set(dist.denominador) == {17}
+
+
+def test_qualidade_bolsas_ja_recebidas():
+    bolsas = base_mini()
+    for coluna in config.COLUNAS_BOLSAS_QUALIDADE:
+        bolsas[coluna] = "Não"
+    bolsas.loc[0, "Bolsista - Iniciação Científica"] = "Sim"   # F Parda, p=2, Doutorado
+    bolsas.loc[5, "Bolsista - Iniciação Científica"] = ""      # vazio (bruto antigo) conta como não
+    q = ind.gerar_qualidade(base_mini(), ANOS, bolsas=bolsas)
+    ic = q[(q.verificacao == "bolsa_ja_recebida") & (q.campo == "Bolsista - Iniciação Científica")
+           & (q.recorte == "nivel_formacao") & (q.categoria == "Doutorado")]
+    assert ic.set_index("sexo")[["numerador", "denominador"]].to_dict("index") == {
+        "Feminino": {"numerador": 2, "denominador": 10},
+        "Masculino": {"numerador": 0, "denominador": 7},
+        "Todos": {"numerador": 2, "denominador": 17},
+    }
+    sem_bolsas = ind.gerar_qualidade(base_mini(), ANOS)
+    assert not (sem_bolsas.verificacao == "bolsa_ja_recebida").any()
+
+
 def test_dicionario_monta_ressalvas_com_os_dados():
     q = ind.gerar_qualidade(base_mini(), ANOS)
     d = ind.gerar_dicionario(q, "2026-10-04", ANOS).set_index("codigo")

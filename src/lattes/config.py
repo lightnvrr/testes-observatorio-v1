@@ -146,6 +146,18 @@ SEXO_NAO_DECLARADO = "Não declarado"
 RACAS_DECLARADAS = ["Branca", "Parda", "Preta", "Amarela", "Indígena"]
 RACA_NAO_DECLARADA = "Não desejo declarar"
 
+# Bolsas: "Sim" = já recebeu a bolsa do CNPq (histórico, Plataforma Carlos Chagas).
+# Qualquer outro valor ("Não" ou vazio, nos brutos antigos) conta como não.
+BOLSA_SIM = "Sim"
+# Bolsas verificadas no relatório de qualidade (lidas dos brutos; só PQ e DT estão no consolidado).
+COLUNAS_BOLSAS_QUALIDADE = [
+    "Bolsista - Iniciação Científica",
+    "Bolsista - Mestrado",
+    "Bolsista - Doutorado",
+    "Bolsista - PQ",
+    "Bolsista - DT",
+]
+
 # "Não informado" em campos de formação e atuação. Sai dos denominadores e
 # a taxa vai para o relatório de qualidade.
 NAO_INFORMADO = "Não informado"
