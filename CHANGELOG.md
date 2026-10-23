@@ -2,7 +2,7 @@
 
 ## V1 fechada (2026-10-23), tag `v1.0-lattes`
 
-- Decisões metodológicas aprovadas pela coordenação do projeto em 23/10/2026: `docs/registro_decisoes_v1.md` (substitui `docs/decisoes_professora.md`). A categoria Negra deixa de ser padrão provisório e passa a ser decisão.
+- Decisões metodológicas aprovadas pela coordenação do projeto em 23/10/2026: `docs/registro_decisoes_v1.md` (substitui `docs/decisoes_professora.md`), com 10 decisões e 6 complementares. A categoria Negra deixa de ser padrão provisório e passa a ser decisão. Critérios objetivos para reavaliar 2026 (estabilização da coorte, medida pela de 2025 entre extrações) e para a volta de setor e enquadramento ("Não informado" abaixo de 20% e diferença entre sexos de até 3 pontos percentuais).
 - Metodologia final: sem linguagem de pendência, com as seções "Decisões metodológicas da V1" e "Perguntas em aberto ao CNPq", em Markdown simples para importar no Notion.
 - Novos documentos: `docs/integracao_observatorio.md` (contrato de dados, chave única, regras de exibição, atualização e perguntas para a equipe do observatório) e `docs/perguntas_cnpq.md` (texto para o Fala.BR).
 - Removido `docs/pendencias_fase5.md`; cada item foi para a metodologia, o registro de decisões, as perguntas ao CNPq ou a integração.

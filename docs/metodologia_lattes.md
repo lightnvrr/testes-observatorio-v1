@@ -55,6 +55,8 @@ Aprovadas pela coordenação do projeto em 23/10/2026. Registro completo, com o 
 9. **Situação atual:** STEM atuação, atuação em Computação e Computação por região são calculados só no agregado 2020 a 2025, como perfil de início de carreira.
 10. **Amostras pequenas:** flag para denominador menor que 30 e para numerador menor que 10, e o agregado 2020 a 2025 como número principal para Indígena.
 
+O registro traz também seis decisões complementares, aprovadas na mesma data: perguntas ao CNPq, uma extração fixa por versão, ordem da ampliação na V2, critério para reavaliar 2026, critério para a volta de setor e enquadramento e regras de exibição das flags.
+
 ---
 
 ## 1. Caracterização da Base de Dados
@@ -216,8 +218,8 @@ Correções em relação à fórmula de interseccionalidade da versão anterior:
 | **Bolsas PQ e DT sobre todas as coortes**, com níveis (1A a 2). | Depende da ampliação da série. Interpretar como "já recebeu a bolsa", porque as bolsas são histórico (limitação 14). |
 | **Participação feminina por UF**, com coluna `uf_sigla`. | UFs pequenas exigem as mesmas flags de amostra. |
 | **Gap formação × atuação e fluxos regionais**, restritos a quem tem os dois lados informados. | Limitação 10. |
-| **Setor e enquadramento**, se o preenchimento melhorar em extrações futuras. | Limitação 11. A taxa de "Não informado" segue no relatório de qualidade para acompanhamento. |
-| **Coorte de 2026**, com uma extração feita depois do fim do ano. | Seção 5. |
+| **Setor e enquadramento**, quando a taxa de "Não informado" ficar abaixo de 20% e a diferença entre os sexos for de até 3 pontos percentuais, conferido no relatório de qualidade. | Limitação 11. A taxa segue no relatório de qualidade para acompanhamento. |
+| **Coorte de 2026**, quando a coorte estabilizar. | Seção 5. |
 
 ### 4.5 Formato de saída
 
@@ -236,7 +238,7 @@ A coorte de titulação de 2026 tem 45.434 pessoas na extração de referência,
 
 O motivo não é mais "extrato parcial": todos os anos vêm da mesma extração. A coorte de 2026 é incompleta porque só contém títulos obtidos até a data da extração (4/10/2026) e registrados no currículo até então. O atraso de atualização do Lattes não é aleatório (limitação 5), e por isso a coorte incompleta enviesa até as proporções, não só os volumes.
 
-O arquivo de 2026 continua sendo baixado e guardado com os demais. Ele será reavaliado com uma extração feita depois do fim de 2026; no código, basta acrescentá-lo a `config.ANOS`.
+O arquivo de 2026 continua sendo baixado e guardado com os demais. Ele será reavaliado quando a coorte estabilizar. Para saber quando isso acontece, compara-se o crescimento da coorte de 2025 entre extrações sucessivas e usa-se o tempo de estabilização observado. No código, basta acrescentar 2026 a `config.ANOS`.
 
 ---
 

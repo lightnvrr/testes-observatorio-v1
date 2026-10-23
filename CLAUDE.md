@@ -25,7 +25,7 @@ Projeto da base Lattes do **KatieNet / Observatório de Mulheres na Ciência** (
 - Números de referência ficam em `tests/referencias/{data_extracao}.json`, conferidos uma vez pela usuária; nunca no código.
 - Consolidação: anos de `config.ANOS` (2020 a 2025; 2026 fora da V1, decidido), **18 colunas** (16 de análise + `Totalpessoas` + `Data Extração BD Lattes`), UTF-8, vírgula. Nenhum registro é removido. Extração base em `config.EXTRACAO`.
 - Indicadores (`src/lattes/indicadores.py`): `participacao_feminina`, `participacao_feminina_no_grupo_racial` (flag denominador < 30), `composicao_racial_das_mulheres` (flag numerador < 10), `taxa_nao_declaracao_raca` (sexo Todos = F + M). Indígena: número principal é o agregado; anuais com `flag_preferir_agregado`. Categoria Negra publicada (`config.AGREGAR_NEGRA = True`, decisão da V1). Setor e enquadramento fora da V1. Taxas de "Não informado" vão para `qualidade_v1.csv`, não para o público.
-- Decisões da V1 em `docs/registro_decisoes_v1.md` (aprovadas em 23/10/2026); os itens 11 a 16 foram resolvidos pela recomendação registrada e aguardam confirmação.
+- Decisões da V1 em `docs/registro_decisoes_v1.md` (aprovadas em 23/10/2026); os itens 11 a 16 (complementares) também foram aprovados em 23/10/2026. Critérios objetivos: 2026 volta quando a coorte estabilizar (medido pelo crescimento da coorte de 2025 entre extrações); setor e enquadramento voltam com "Não informado" abaixo de 20% e diferença entre sexos de até 3 pontos percentuais no `qualidade_v1.csv`.
 
 ## Definições
 

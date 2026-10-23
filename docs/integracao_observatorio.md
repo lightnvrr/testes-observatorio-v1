@@ -122,7 +122,7 @@ O painel do CNPq é atualizado com uma extração nova prevista **todo mês** e 
 | **Referência** (`tests/referencias/{nova_data}.json`) | Criar a partir do manifest novo (linhas e pessoas por ano) e dos domínios do consolidado, conferir contra o painel e preencher `conferido_por` e `conferido_em`. Sem ela, os testes de dados falham. |
 | **Domínios** | `pytest -m dados` falha se aparecer ou sumir uma categoria em sexo, raça, grandes áreas, nível, setor ou regiões. Além disso, a consolidação para se aparecer um nível de formação novo, e a geração de indicadores para se aparecer sexo, raça, nível ou ano fora do domínio conhecido. Uma categoria nova precisa de decisão antes de entrar nos indicadores. |
 | **Números da metodologia** | O teste `test_documentacao.py` (dados) lista os números citados que deixaram de bater. Atualizar `docs/metodologia_lattes.md` e `docs/numeros_metodologia_v1.md`, ou publicar a metodologia como da extração anterior. |
-| **Decisões** | Reavaliar as que dependem de volume (amostras pequenas, PQ, setor e enquadramento). |
+| **Decisões** | Reavaliar as que dependem de volume (amostras pequenas, PQ). Setor e enquadramento só voltam se, no `qualidade_v1.csv`, a taxa de "Não informado" ficar abaixo de 20% e a diferença entre os sexos for de até 3 pontos percentuais. Para 2026, comparar o crescimento da coorte de 2025 com o da extração anterior (registro de decisões, itens 14 e 15). |
 
 Depois de tudo: `pytest`, `pytest -m dados` e `pytest -m rede`.
 
