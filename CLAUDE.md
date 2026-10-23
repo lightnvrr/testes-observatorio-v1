@@ -40,5 +40,6 @@ Projeto da base Lattes do **KatieNet / Observatório de Mulheres na Ciência** (
 
 - `src/lattes/config.py`: anos, caminhos, colunas consolidadas, definição de STEM.
 - `src/lattes/`: funções reutilizáveis. `scripts/`: pontos de entrada (baixar, consolidar, gerar indicadores).
-- `docs/metodologia_lattes.md`: documentação metodológica (fonte de verdade das definições).
+- `docs/metodologia_lattes.md`: metodologia V1 (fonte de verdade das definições). Todo número citado deve vir das saídas atuais e estar mapeado em `docs/numeros_metodologia_v1.md`. Versão de julho/2026 em `docs/historico/` (não editar).
+- `docs/decisoes_professora.md`: decisões pendentes. `docs/pendencias_fase5.md`: notas de trabalho (manter até revisão da usuária).
 - `tests/`: `pytest` roda só unitários; `pytest -m dados` exige `data/raw/` preenchido; `pytest -m rede` acessa o painel.

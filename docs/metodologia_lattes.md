@@ -1,10 +1,40 @@
 # Lattes
 
-# Período 03 - Estrutura Metodológica da Base de Dados Lattes
+# Estrutura Metodológica da Base de Dados Lattes (V1)
 
-**Período:** 03 (Dias 31 a 45)
+**Versão:** V1
 
-**Data:** Julho/2026
+**Data:** Outubro/2026
+
+**Extração de referência:** 4 de outubro de 2026
+
+**Versão anterior:** [historico/metodologia_lattes_2026-07.md](historico/metodologia_lattes_2026-07.md)
+
+Fontes citadas ao longo do texto:
+
+- **[NT]**: CNPq, *Painel de Formação e Atuação do Lattes, Nota Técnica 01/2024* ([nota_tecnica_painel_lattes.pdf](nota_tecnica_painel_lattes.pdf)).
+- **[WB]**: workbook `PainelLattes-FormaoeAtuao` publicado pelo CNPq no Tableau Public (fórmulas do arquivo .twb e extratos .hyper).
+- **[Saídas]**: arquivos gerados pelo pipeline deste projeto a partir da extração de referência (`manifest.json`, `lattes_consolidado.meta.json`, `indicadores_v1.csv`, `qualidade_v1.csv`, `indicadores_v1.meta.json`).
+
+Todos os números deste documento vêm das [Saídas] da extração de 4 de outubro de 2026, salvo quando a fonte indicada é a [NT].
+
+---
+
+## O que mudou em relação à versão de julho/2026
+
+| # | Mudança | Motivo |
+| --- | --- | --- |
+| 1 | **Nova base: extração de 4/10/2026**, baixada de novo pelo pipeline. Os números da versão anterior (contagens e percentuais) não são reproduzíveis e foram substituídos. | Os arquivos brutos antigos não existem mais, e o painel só oferece a extração vigente. A extração atual é a única que qualquer pessoa consegue baixar de novo na fonte. |
+| 2 | **`Ano` passa a ser o ano de obtenção da última titulação**, não o ano de um extrato. Os indicadores "por ano" são por coorte de titulação. | O campo `.Ano` do painel é o campo `ANOOBTENCAOTITULO` [WB], e a [NT] o descreve como "Ano de Formação". Todos os anos vêm de uma única extração. |
+| 3 | **A unidade de análise é a pessoa**, contada uma vez pela última titulação. Os indicadores somam a coluna `Totalpessoas`. A limitação de dupla contagem foi retirada. | A [NT] informa que cada pessoa entra uma vez, pela última titulação. Cada linha do arquivo exportado agrega pessoas com os mesmos atributos, por isso a contagem certa é a soma de `Totalpessoas`, não o número de linhas. |
+| 4 | **Indicadores de situação atual** (área e região de atuação) são calculados só sobre o agregado de 2020 a 2025 e descritos como "situação em out/2026 das pessoas tituladas de 2020 a 2025". | Atuação e bolsas refletem a data da extração, não o ano da titulação. Por coorte recente, mediriam sobretudo o tempo desde o título. |
+| 5 | **Recorte de raça implementado**, com dois indicadores distintos (participação feminina dentro do grupo racial e composição racial das mulheres), taxa de não declaração própria, flags de amostra pequena e categoria Negra opcional. | Decisão de incluir raça na V1. A fórmula de interseccionalidade da versão anterior foi corrigida: passa a usar Grande Área, e não Área, e exclui "Não desejo declarar" do denominador. |
+| 6 | **Bolsa PQ, bolsa DT, setor de atividade e enquadramento ficam fora da V1.** | PQ e DT têm volume muito baixo e as bolsas são histórico de concessões. Setor e enquadramento têm alto preenchimento "Não informado". Ver a seção 4.3. |
+| 7 | **Bolsas são tratadas como histórico** ("já recebeu"), não como situação vigente. | As bolsas vêm da Plataforma Integrada Carlos Chagas [NT], e parte relevante dos doutores tem bolsa de iniciação científica registrada (limitação 14). |
+| 8 | **2026 continua fora, com outro motivo**: coorte de titulação incompleta, com atraso de atualização não aleatório. | O motivo antigo ("extrato parcial") deixou de valer com o item 2. |
+| 9 | **O consolidado passa a ter 18 colunas** (16 de análise + `Totalpessoas` + `Data Extração BD Lattes`), e o dicionário foi corrigido contra os valores reais. | Os indicadores precisam do peso de cada linha, e a data de extração garante a proveniência. Vários domínios documentados não batiam com a base (UF, setor, bolsas, sexo). |
+| 10 | **O download é automatizado e auditável** (manifest com SHA-256 por arquivo). | Reprodutibilidade (seção 6). |
+| 11 | **As limitações foram unificadas numa só seção**, e a [NT] passou a ser citada como fonte. | A versão anterior repetia limitações em duas seções. |
 
 ---
 
@@ -12,157 +42,201 @@
 
 | Campo | Descrição |
 | --- | --- |
-| **Nome da base** | Plataforma Lattes — Extrato de Currículos de Pesquisadores (recorte de Pós-Graduação) |
-| **Instituição responsável** | CNPq — Conselho Nacional de Desenvolvimento Científico e Tecnológico |
-| **Objetivo** | Registrar e organizar a produção científica, tecnológica e de inovação de pesquisadores brasileiros. A base Lattes é o padrão nacional de currículo acadêmico e é utilizada em processos de avaliação e fomento à pesquisa (bolsas, projetos, etc.). |
-| **Origem dos dados** | Painel de Formação e Atuação Lattes, disponibilizado pelo CNPq em formato de Business Intelligence (BI) interativo. Os dados são exportados a partir do painel em [http://bi.cnpq.br/painel/formacao-atuacao-lattes/](http://bi.cnpq.br/painel/formacao-atuacao-lattes/) e cobrem pesquisadores com vínculo à pós-graduação (Mestrado, Doutorado, Mestrado Profissional). |
-| **Periodicidade de atualização** | Anual (extrato disponibilizado uma vez por ano com dados do ciclo vigente). A data exata de extração consta na variável `Data Extração BD Lattes`. |
-| **Formato dos arquivos** | CSV, codificação UTF-16, separador de campo: tabulação (`\t`). Um arquivo por ano. Após consolidação pelo pipeline do projeto, o arquivo resultante é UTF-8 com separador vírgula. |
-| **Cobertura temporal disponível** | 2020 a 2026 (7 anos). O arquivo de 2026 é tratado como potencialmente parcial — ver seção de Limitações. |
-| **Volume de dados (bruto)** | ~312 MB total; entre 16 MB e 57 MB por arquivo anual. Registros: **438.344** no total (incluindo 2026): 2020=58.584 · 2021=66.559 · 2022=71.596 · 2023=79.937 · 2024=76.655 · 2025=62.589 · 2026=22.424. |
-| **Volume de dados (consolidado)** | **415.920** registros (2020–2025; 2026 excluído explicitamente pela lista `ANOS` no script `consolidar_lattes.py`). 16 colunas selecionadas para análise. Nenhum registro é removido durante a consolidação — a diferença é inteiramente a exclusão intencional do extrato de 2026. |
-| **Link para acesso à fonte** | [http://bi.cnpq.br/painel/formacao-atuacao-lattes/](http://bi.cnpq.br/painel/formacao-atuacao-lattes/) (Painel BI — fonte efetivamente utilizada para exportar os arquivos brutos).  |
+| **Nome da base** | Painel de Formação e Atuação do Lattes: pessoas com mestrado, mestrado profissional ou doutorado registrados no Currículo Lattes. |
+| **Instituição responsável** | CNPq (Conselho Nacional de Desenvolvimento Científico e Tecnológico). |
+| **Origem dos dados** | Base de Currículos da Plataforma Lattes [NT]. As bolsas vêm da Plataforma Integrada Carlos Chagas [NT]. O painel em [http://bi.cnpq.br/painel/formacao-atuacao-lattes/](http://bi.cnpq.br/painel/formacao-atuacao-lattes/) embute um workbook do Tableau Public [WB]. Os arquivos brutos são exportados da aba "Painel - Download" desse workbook. |
+| **Universo** | Currículos atualizados nos últimos 60 meses, pela mesma regra da Busca de Currículos do Lattes [NT]. Só entram pessoas com titulação de mestrado ou doutorado preenchida [NT]. |
+| **Unidade de análise** | Pessoa, contada uma única vez pela **última titulação** registrada: doutores não entram na contagem de mestres, mesmo que tenham registrado o mestrado [NT]. Registros sem ano de titulação ficam fora do painel [NT]. |
+| **Recorte temporal (`Ano`)** | Ano de obtenção da última titulação [NT][WB]. O painel cobre de 1948 ao ano atual [NT]. A V1 usa as coortes de **2020 a 2025**. |
+| **Periodicidade** | A extração prevista é mensal [NT]. Cada nova extração pode alterar os resultados [NT], por isso a V1 fica fixada na extração de **4/10/2026** (`Data Extração BD Lattes`). |
+| **Formato dos arquivos brutos** | Um CSV por ano de titulação, guardado exatamente como veio. A exportação por URL vem em UTF-8 com vírgula. O formato da interface ("Tabela de referência cruzada") vem em UTF-16 com tabulação. O pipeline aceita os dois. |
+| **Formato do consolidado** | UTF-8, separador vírgula, 18 colunas. Nenhum registro é removido na consolidação. |
 
-### Limitações conhecidas
+### Volume da extração de referência
 
-| # | Limitação | Impacto |
+| Ano de titulação | Pessoas | Linhas do arquivo | Tamanho do bruto |
+| --- | --- | --- | --- |
+| 2020 | 53.178 | 52.691 | 20,9 MB |
+| 2021 | 62.739 | 61.910 | 24,6 MB |
+| 2022 | 71.359 | 70.264 | 27,9 MB |
+| 2023 | 82.976 | 81.473 | 32,3 MB |
+| 2024 | 81.923 | 80.170 | 31,7 MB |
+| 2025 | 78.130 | 76.065 | 30,1 MB |
+| **Consolidado (2020 a 2025)** | **430.305** | **422.573** | |
+| 2026 (fora da V1) | 45.434 | 44.414 | 17,5 MB |
+
+Cada linha do arquivo é uma combinação de atributos, e a coluna `Totalpessoas` diz quantas pessoas têm aquela combinação. O número de linhas depende das colunas exportadas; o número de pessoas não. Todos os indicadores contam pessoas.
+
+### Bases temporais dos indicadores
+
+| Base | O que mede | Períodos |
 | --- | --- | --- |
-| 1 | **Arquivo 2026 possivelmente incompleto** — tamanho de 16 MB contra 45–57 MB dos anos anteriores, com apenas 22.424 registros vs. média de ~72.000 nos anos completos. Provavelmente extrato parcial (meio de ano ou janela de extração menor). | Não deve ser usado em comparações de volume absoluto com anos anteriores. Pode ser incluído com ressalva explícita. |
-| 2 | **Unidade de análise é o registro (vínculo), não a pesquisadora** — uma mesma pesquisadora pode aparecer em múltiplos anos e/ou ter múltiplos vínculos no mesmo ano, gerando dupla contagem. | Percentuais de participação são sobre registros, não sobre indivíduos únicos. |
-| 3 | **Subdeclaração de gênero e raça** — parcela dos registros contém `Sexo = "Não declarado"` e `Cor ou Raça = "Não desejo declarar"`. | Exclui automaticamente parte da população da análise; pode enviesar grupos específicos. |
-| 4 | **`Grande Área` e `Área` são autodeclaradas de forma semi-independente** — a taxonomia de áreas é controlada (verificado: nenhuma variação de grafia relevante nos 99 valores distintos de `Área (Formação)`), mas grande área e área específica não aninham 100% (~2% dos registros STEM têm área específica incompatível, ex.: `Grande Área = Engenharias` / `Área = Educação`). | Baixo impacto; recomenda-se ancorar recortes disciplinares em `Grande Área`. |
-| 5 | **Recorte limitado à pós-graduação** — a base não cobre pesquisadores de graduação ou técnicos sem vínculo formal de pós-graduação. | O perfil da base é enviesado para pesquisadores com formação avançada; não representa a totalidade do mercado de trabalho em ciência e tecnologia. |
-| 6 | **Bolsas registradas como snapshot** — as variáveis de bolsa (`Bolsista - PQ`, `Bolsista - DT`, etc.) refletem o status no momento da extração, não o histórico acumulado de bolsas. | Não permite análise de trajetória de bolsas ao longo do tempo para um mesmo pesquisador. |
-| 7 | **Ausência de identificador único** — não há ID de pesquisador na base exportada; a deduplicação ou rastreamento longitudinal não é possível com as colunas disponíveis. | Impossibilita análises de painel individual (entrada, saída, progressão de carreira). |
-| 8 | **Assimetria de completude entre Formação e Atuação** — `Grande Área (Atuação)` tem 17,4% de "Não informado" (~72 mil registros) contra 5,6% em Formação. | Subconta recortes disciplinares de atuação e prejudica comparações formação × atuação; restringir tais comparações a registros com ambas as grandes áreas preenchidas. |
-| 9 | **A definição de recorte STEM afeta o indicador de gênero** — trocar uma lista fixa de áreas por grande área eleva a participação feminina medida de 26,9% para 34,7% (formação), pois listas restritas concentram as subáreas mais masculinizadas. | Reportar sempre a definição adotada e, de preferência, o indicador desagregado por grande área/área. |
+| **Por ano de titulação** (`coorte_titulacao`) | Atributos de formação (sexo, raça, grande área, nível) das pessoas tituladas em cada ano. | Cada ano de 2020 a 2025 e o agregado 2020 a 2025. |
+| **Situação na extração** (`situacao_na_extracao`) | Situação em out/2026 (área e região de atuação) das pessoas tituladas de 2020 a 2025: um perfil de início de carreira, não de todas as pesquisadoras. | Só o agregado 2020 a 2025. |
 
 ---
 
-## 2. Dicionário das Variáveis Relevantes
+## 2. Limitações conhecidas
 
-> As variáveis marcadas com **[Consolidado]** são as 16 retidas na consolidação do pipeline atual. As demais pertencem aos arquivos brutos e podem ser reincorporadas conforme necessidade.
-> 
-
-### 2.1 Identificação e Dados Pessoais
-
-| Variável | Descrição | Tipo | Valores possíveis / Observações |
-| --- | --- | --- | --- |
-| `Ano` | Ano de referência do extrato | int | 2020, 2021, 2022, 2023, 2024, 2025, 2026 |
-| `Sexo` **[Consolidado]** | Gênero autodeclarado da pesquisadora | enum | `Feminino`, `Masculino`, `Não declarado` |
-| `Cor ou Raça` **[Consolidado]** | Raça/cor autodeclarada | enum | `Branca`, `Preta`, `Parda`, `Amarela`, `Indígena`, `Não desejo declarar` |
-| `Data Extração BD Lattes` | Data em que os dados foram extraídos da Plataforma Lattes | string/date | Ex: `2024-03-15`. Útil para verificar a janela de coleta do extrato anual. |
-| `País de Nascimento` | País de nascimento da pesquisadora | string | Ex: `Brasil`, `Estados Unidos`. Maioria dos registros: Brasil. |
-
-### 2.2 Formação Acadêmica
-
-| Variável | Descrição | Tipo | Valores possíveis / Observações |
-| --- | --- | --- | --- |
-| `País (Formação)` | País onde ocorreu a formação acadêmica | string | Ex: `Brasil`, `Estados Unidos`, `França` |
-| `Região (Formação)` **[Consolidado]** | Região brasileira da instituição de formação | enum | `Norte`, `Nordeste`, `Centro-Oeste`, `Sudeste`, `Sul`. Vazio para formação no exterior. |
-| `UF (Formação)` **[Consolidado]** | Unidade Federativa (estado) da instituição de formação | string | Siglas estaduais brasileiras (SP, RJ, MG, etc.) |
-| `Cidade (Formação)` | Município da instituição de formação | string | Alta cardinalidade (centenas de municípios); não utilizada nos indicadores atuais, que agregam por Região/UF. |
-| `Grande Área (Formação)` **[Consolidado]** | Grande área do conhecimento do CNPq referente à formação | enum | `Ciências Exatas e da Terra`, `Ciências Biológicas`, `Engenharias`, `Ciências da Saúde`, `Ciências Agrárias`, `Ciências Sociais Aplicadas`, `Ciências Humanas`, `Lingüística, Letras e Artes`, `Outra`, `Tecnologias`, `Não informado`. Obs.: "Tecnologias" tem volume desprezível (3 registros em Formação). |
-| `Área (Formação)` **[Consolidado]** | Área específica dentro da grande área de formação | string | 99 valores distintos. Ex.: `Ciência da Computação`, `Matemática`, `Física`, `Química`, `Engenharia Elétrica`, `Probabilidade e Estatística`. Obs.: os nomes seguem exatamente a tabela de áreas do CNPq — usar `Probabilidade e Estatística` (não "Estatística"); subespecialidades de computação (Ciência de Dados, IA, Sistemas de Informação) **não existem** como área separada nessa base. |
-| `Instituição (Formação)` | Nome da instituição de ensino onde ocorreu a formação | string | Ex: `Universidade de São Paulo`, `UNICAMP` |
-| `Nível (Formação)` **[Consolidado]** | Nível de pós-graduação do vínculo registrado | enum | `Mestrado`, `Doutorado`, `Mestrado Profissional` |
-
-### 2.3 Atuação Profissional
-
-| Variável | Descrição | Tipo | Valores possíveis / Observações |
-| --- | --- | --- | --- |
-| `País (Atuação)` | País onde a pesquisadora atua profissionalmente | string | Ex: `Brasil` |
-| `Região (Atuação)` **[Consolidado]** | Região brasileira da instituição de atuação | enum | `Norte`, `Nordeste`, `Centro-Oeste`, `Sudeste`, `Sul` |
-| `UF (Atuação)` **[Consolidado]** | Unidade Federativa da instituição de atuação | string | Siglas estaduais |
-| `Cidade (Atuação)` | Município da instituição de atuação | string | Alta cardinalidade; não utilizada nos indicadores atuais, que agregam por Região/UF. |
-| `Grande Área (Atuação)` **[Consolidado]** | Grande área do conhecimento da atividade profissional atual | enum | Mesmos valores de `Grande Área (Formação)`. **Atenção:** 17,4% dos registros = `Não informado` (~72 mil) — ver Limitação 8. |
-| `Área (Atuação)` **[Consolidado]** | Área específica da atividade profissional | string | Ex: `Ciência da Computação`, `Engenharia Elétrica` |
-| `Instituição (Atuação)` | Instituição onde a pesquisadora atua | string | Nome da instituição empregadora, sem padronização de grafia (a mesma instituição pode aparecer com nomes distintos); não utilizada nos indicadores atuais. |
-| `Setor de Atividade (Atuação)` **[Consolidado]** | Setor de atuação profissional | enum | `Ensino Superior`, `Setor Empresarial`, `Setor Governamental`, `Setor Exterior` |
-| `Enquadramento (Atuação)` **[Consolidado]** | Enquadramento ou cargo na atividade | enum | `Professor`, `Professor Assistente`, `Pesquisador`, `Assistente de Pesquisa`, `Engenheiro`, `Pós-doutorando`, `Outro` |
-
-### 2.4 Bolsas e Fomentos
-
-> Todas as variáveis de bolsa são do tipo **booleano/string**: indicam se a pesquisadora possui aquele tipo de bolsa ativa no momento da extração. Valores: `Sim` / (vazio ou ausente = Não).
-> 
-
-| Variável | Descrição | Tipo | Observações |
-| --- | --- | --- | --- |
-| `Bolsista - Iniciação Científica` | Bolsa de iniciação científica (IC) | bool/string | Voltada para graduação; presença nesta base indica vínculo com pós-graduação concomitante. |
-| `Bolsista - Graduação Sanduiche` | Bolsa de graduação sanduíche (intercâmbio) | bool/string | Voltada para intercâmbio de graduação; presença nesta base indica vínculo de pós-graduação concomitante, assim como a IC. |
-| `Bolsista - Mestrado` | Bolsa de mestrado CNPq | bool/string | Fomento individual concedido durante o próprio mestrado; não indica nível de excelência, apenas vínculo de financiamento. |
-| `Bolsista - Doutorado` | Bolsa de doutorado CNPq | bool/string | Fomento individual concedido durante o próprio doutorado; análogo à bolsa de mestrado. |
-| `Bolsista - Pós-doutorado` | Bolsa de pós-doutorado CNPq | bool/string | Concedida após a conclusão do doutorado, antes da consolidação em bolsas PQ/DT. |
-| `Bolsista - PQ` **[Consolidado]** | Bolsa de Produtividade em Pesquisa (PQ) CNPq | bool/string | Principal indicador de consolidação da carreira de pesquisa. Agrupa todos os níveis de PQ. |
-| `Bolsista - PQ 1A` | Nível mais alto da bolsa PQ | bool/string | Hierarquia: 1A > 1B > 1C > 1D > 2/1E |
-| `Bolsista - PQ 1B` | Nível PQ 1B | bool/string | Segundo nível mais alto da hierarquia PQ, abaixo de 1A. |
-| `Bolsista - PQ 1C` | Nível PQ 1C | bool/string | Nível intermediário da hierarquia PQ, entre 1B e 1D. |
-| `Bolsista - PQ 1D` | Nível PQ 1D | bool/string | Nível mais baixo da faixa PQ 1, acima apenas do PQ 2/1E. |
-| `Bolsista - PQ 2 ou 1E` | Nível de entrada da bolsa PQ | bool/string | Nível mais acessível entre os PQ. |
-| `Bolsista - DT` **[Consolidado]** | Bolsa de Desenvolvimento Tecnológico e Extensão Inovadora (DT) CNPq | bool/string | Foco em inovação e transferência tecnológica; menos comum que PQ. |
-| `Bolsista - DT 1A` | Nível mais alto da bolsa DT | bool/string | Hierarquia: 1A > 1B > 1C > 1D > 2/1E, mesma estrutura da bolsa PQ. |
-| `Bolsista - DT 1B` | Nível DT 1B | bool/string | Segundo nível mais alto da hierarquia DT, abaixo de 1A. |
-| `Bolsista - DT 1C` | Nível DT 1C | bool/string | Nível intermediário da hierarquia DT, entre 1B e 1D. |
-| `Bolsista - DT 1D` | Nível DT 1D | bool/string | Nível mais baixo da faixa DT 1, acima apenas do DT 2/1E. |
-| `Bolsista - DT 2 ou 1E` | Nível de entrada da bolsa DT | bool/string | Nível mais acessível entre os DT, análogo ao PQ 2/1E. |
+| # | Limitação | Impacto e tratamento |
+| --- | --- | --- |
+| 1 | **Universo restrito a currículos atualizados nos últimos 60 meses** [NT]. | Quem não atualiza o currículo há mais de 60 meses some da base. Isso não é aleatório: afeta mais quem saiu da academia ou da pesquisa. A base não representa todas as pessoas tituladas. |
+| 2 | **Retrato de uma única extração.** A extração é prevista mensalmente e cada nova extração pode alterar os resultados [NT]. | Os números valem para a extração de 4/10/2026. Para comparar com versões futuras, é preciso fixar a extração (o pipeline guarda os brutos por data de extração). |
+| 3 | **Cada pessoa entra uma vez, pela última titulação** [NT]. `Nível (Formação)` é o maior título, e `Ano` é o ano desse título. | Não há dupla contagem. Em compensação, a base não permite estudar trajetórias (mestrado seguido de doutorado). |
+| 4 | **Coortes de mestrado encolhem com o tempo.** Quem é mestre numa coorte e depois vira doutor passa para a coorte do doutorado [NT]. | As coortes de mestrado mais antigas ficam só com quem (ainda) não fez doutorado. Se a progressão para o doutorado for diferente entre mulheres e homens (ou entre grupos raciais), a participação feminina no mestrado fica enviesada, e o viés cresce com a idade da coorte. Comparações de mestrado entre anos levam ressalva. |
+| 5 | **Atraso de atualização dos currículos.** Títulos recentes demoram a ser registrados, e o atraso varia por área, nível e perfil de quem atualiza o currículo. | A coorte do ano corrente é incompleta e enviesada até nas proporções. Por isso 2026 fica fora da V1 (seção 5). |
+| 6 | **Atuação e bolsas refletem a data da extração**, não o ano da titulação. | Indicadores de situação atual só são calculados no agregado 2020 a 2025 e descrevem um perfil de início de carreira. |
+| 7 | **Dados autodeclarados** [NT]. Há certificação em alguns módulos (artigos, dados pessoais, formação no país) e um termo de veracidade [NT]. | Sexo, raça e áreas dependem do que a pessoa informou. |
+| 8 | **Não declaração de raça.** Em 2020 a 2025, 5,60% das pessoas com sexo declarado escolheram "Não desejo declarar" (5,17% das mulheres e 6,17% dos homens). A taxa cai entre as coortes: 6,67% em 2020 e 4,77% em 2025. | Essas pessoas saem dos denominadores dos indicadores raciais. Se a não declaração variar entre grupos, as composições podem ficar enviesadas. A taxa é publicada como indicador próprio. |
+| 9 | **Sexo "Não declarado"**, que não está entre as opções descritas na [NT] (feminino e masculino). São 4.119 pessoas em 2020 a 2025 (0,96%), com crescimento entre as coortes (0,71% em 2020 e 1,17% em 2025). Nesse grupo, "Preta" é a maior categoria de raça (35,81%, contra 8,23% entre quem declarou sexo) e "Não desejo declarar" chega a 22,87% (5,60% entre quem declarou sexo). | O padrão sugere problema de preenchimento ou de codificação. Essas pessoas saem de todos os indicadores, que exigem sexo declarado, e ficam registradas no relatório de qualidade. Pergunta enviada ao CNPq. |
+| 10 | **Assimetria de completude entre formação e atuação.** "Não informado" atinge 17,50% em Grande Área (Atuação) e 5,55% em Grande Área (Formação). Em Região (Atuação), chega a 26,45%. A instituição de atuação é a do vínculo vigente, e "Não informado" pode indicar desemprego ou currículo desatualizado [NT]. | Recortes de atuação cobrem só quem tem atuação informada. A ausência é um pouco maior entre mulheres em Grande Área (Atuação): 18,31%, contra 16,44% dos homens (entre formados em STEM, 20,98% contra 18,33%). Em Computação, a região de atuação falta para 23,08% das mulheres e 24,06% dos homens. Ressalvas no dicionário de indicadores. |
+| 11 | **Setor e enquadramento com preenchimento muito baixo.** "Não informado" atinge 47,07% em Setor de Atividade e 23,11% em Enquadramento. O enquadramento é um campo aberto, agrupado pelo CNPq a partir dos termos digitados [NT]. | Os dois ficam fora da V1 (seção 4.3). |
+| 12 | **Classificação de áreas.** Grande área e área são classificadas pela Árvore do Conhecimento do CNPq. Quando o dado diverge da Árvore, a grande área vira "Outra"; quando falta, "Não informado" [NT]. "Outra" reúne 8,23% das pessoas em Grande Área (Formação) e 1,16% em Grande Área (Atuação). "Tecnologias" não existe na Árvore e abarca sobretudo especialidades próximas das Engenharias [NT]: são 2 pessoas na formação e 40 na atuação. Em Grande Área (Atuação) aparece ainda "Serviço Social" (1 pessoa), que na Árvore é uma área, não uma grande área. | "Tecnologias" e "Outra" ficam fora do STEM. Áreas emergentes classificadas em "Outra" (como robótica e microeletrônica) não entram no STEM. |
+| 13 | **A definição de STEM afeta o indicador de gênero.** | Listas restritas de áreas concentram as subáreas mais masculinizadas e reduzem a participação feminina medida. A V1 usa Grande Área (Ciências Exatas e da Terra ou Engenharias) e informa sempre a definição. |
+| 14 | **Bolsas são histórico de concessões, não situação vigente.** Os dados vêm da Plataforma Integrada Carlos Chagas, não da autodeclaração [NT]. Evidência: 19,88% dos doutores titulados de 2020 a 2025 têm bolsa de iniciação científica (bolsa de graduação) registrada, 11,53% têm bolsa de mestrado e 10,20%, bolsa de doutorado. | "Sim" significa "já recebeu a bolsa do CNPq até a data da extração". Isso favorece coortes antigas nas bolsas de fim de carreira (PQ, DT). |
+| 15 | **Recorte limitado à pós-graduação.** Só entram pessoas com mestrado ou doutorado [NT]. | A base não representa toda a força de trabalho em ciência e tecnologia. |
+| 16 | **Ausência de identificador individual** na exportação. | Não há como acompanhar a mesma pessoa entre extrações. |
+| 17 | **Instituições podem vir de texto livre**, com erros de grafia e variações de nome [NT]. | Instituição não é usada nos indicadores da V1. |
+| 18 | **Grupos pequenos.** O grupo Indígena tem poucas pessoas em vários recortes anuais (por exemplo, 39 pessoas com sexo declarado em STEM formação em 2023, contra 178 no agregado 2020 a 2025). | Flags de amostra pequena e uso do agregado como número principal para Indígena (seção 4.1). |
 
 ---
 
-## 3. Matriz de Indicadores
+## 3. Dicionário das Variáveis
 
-### 3.1 Indicadores já implementados no pipeline atual
+### 3.1 Colunas do consolidado
 
-| Indicador | Explicação | Fórmula | Variáveis utilizadas | Agregação | Limitação |
-| --- | --- | --- | --- | --- | --- |
-| **Participação feminina geral** | Proporção de registros femininos sobre o total de registros com gênero declarado, por ano. Indica a presença global de mulheres na base. | `(# Sexo = "Feminino") / (# Sexo ≠ "Não declarado") × 100` | `Sexo`, `Ano` | Por ano | Conta registros, não indivíduos. Exclui "Não declarado". |
-| **Participação feminina por grande área de formação** | Proporção de mulheres em cada uma das grandes áreas do conhecimento CNPq (Engenharias, Ciências Exatas, etc.). Revela disparidades por campo disciplinar. | `(# Sexo = "Feminino" e Grande Área = X) / (# Grande Área = X e Sexo declarado) × 100` | `Sexo`, `Grande Área (Formação)`, `Ano` | Por grande área e ano | Não captura heterogeneidade interna das grandes áreas. |
-| **Participação feminina em STEM** | Proporção de mulheres em registros cuja **Grande Área** seja `"Ciências Exatas e da Terra"` ou `"Engenharias"`. Strings verificadas contra os valores distintos reais da base. Inclui: Ciência da Computação, Química, Matemática, Física, Geociências, Probabilidade e Estatística, Oceanografia, Astronomia (Ciências Exatas) e todas as Engenharias cadastradas (Elétrica, Civil, Mecânica, Materiais, Química, Produção, Sanitária, Biomédica, Nuclear, Aeroespacial, Transportes, Energia, Naval, Minas). **Subespecialidades de Computação** (Ciência de Dados, IA, Engenharia de Software, Redes de Computadores, Sistemas de Informação) não existem como categoria separada — ficam em "Ciência da Computação". **Robótica, Mecatrônica e Automação** e **Microeletrônica** ficam fora porque o CNPq as classifica em "Outra" grande área, não em "Engenharias". | `(# Sexo = "Feminino" e Grande Área ∈ {"Ciências Exatas e da Terra","Engenharias"}) / (# Grande Área ∈ {...} e Sexo declarado) × 100` | `Sexo`, `Grande Área (Formação)`, `Grande Área (Atuação)`, `Ano` | Por área específica e ano (detalhado); por Grande Área e ano (agregado) | Grande Área (Atuação) tem 17,4% de registros "Não informado" — esse subconjunto não entra no STEM de Atuação mesmo que a área específica seja STEM. |
-| **Participação feminina por nível de formação** | Proporção de mulheres em cada nível de pós-graduação (Mestrado, Doutorado, Mestrado Profissional). Indica em qual estágio da carreira acadêmica a disparidade é mais acentuada. | `(# Sexo = "Feminino" e Nível = X) / (# Nível = X e Sexo declarado) × 100` | `Sexo`, `Nível (Formação)`, `Ano` | Por nível e ano | Cobre apenas pós-graduação; não rastreia transição de nível para um mesmo indivíduo. |
-| **Proporção de bolsistas PQ por gênero** | Proporção de mulheres entre os detentores de bolsa de Produtividade em Pesquisa (PQ) CNPq por ano. Indica acesso feminino ao nível mais alto de fomento individual à pesquisa. | `(# Sexo = "Feminino" e Bolsista-PQ = "Sim") / (# Bolsista-PQ = "Sim" e Sexo declarado) × 100` | `Sexo`, `Bolsista - PQ`, `Ano` | Por ano | Reflete snapshot do momento de extração; não histórico acumulado. |
-| **Participação feminina na atuação em Computação** | Proporção de mulheres entre profissionais com atuação em Ciência da Computação por ano. Compara formação vs. atuação profissional efetiva na área. | `(# Sexo = "Feminino" e Área (Atuação) = "Ciência da Computação") / (# Área (Atuação) = "Ciência da Computação" e Sexo declarado) × 100` | `Sexo`, `Área (Atuação)`, `Ano` | Por ano | Sensível à grafia exata do nome da área. |
-| **Distribuição regional de profissionais de Computação por gênero** | Proporção de mulheres em Computação por região do Brasil. Revela desigualdades geográficas sobrepostas à desigualdade de gênero. | `(# Sexo = "Feminino" e Área(Atuação) = "Ciência da Computação" e Região = R) / (# Área(Atuação) = "Ciência da Computação" e Região = R e Sexo declarado) × 100` | `Sexo`, `Área (Atuação)`, `Região (Atuação)`, `Ano` | Por região e ano | Agrupamento por região oculta variações entre estados da mesma região. |
+O consolidado tem 18 colunas: 16 de análise e 2 de controle. Os valores listados são os valores distintos reais da extração de referência (2020 a 2025), conferidos por teste automático, que falha se surgir categoria nova.
 
-### 3.2 Indicadores sugeridos (a implementar)
+| Variável | Descrição | Valores na extração de referência |
+| --- | --- | --- |
+| `Ano` | Ano de obtenção da última titulação [NT][WB]. | 2020 a 2025 no consolidado. |
+| `Sexo` | Sexo registrado no currículo [NT]. | `Feminino`, `Masculino`, `Não declarado` (este último não aparece na [NT]; ver limitação 9). |
+| `Cor ou Raça` | Cor ou raça registrada no currículo [NT]. | `Amarela`, `Branca`, `Indígena`, `Parda`, `Preta`, `Não desejo declarar`. |
+| `Nível (Formação)` | Última titulação registrada no módulo de formação [NT]. | `Mestrado`, `Mestrado Profissional`, `Doutorado`. |
+| `Grande Área (Formação)` | Primeiro nível da Árvore do Conhecimento do CNPq [NT]. | `Ciências Agrárias`, `Ciências Biológicas`, `Ciências da Saúde`, `Ciências Exatas e da Terra`, `Ciências Humanas`, `Ciências Sociais Aplicadas`, `Engenharias`, `Lingüística, Letras e Artes`, `Outra`, `Tecnologias`, `Não informado`. |
+| `Área (Formação)` | Segundo nível da Árvore, vinculado à tabela de programas da CAPES. Sem programa CAPES, vem do campo livre do currículo, que não é obrigatório [NT]. | Nomes da tabela de áreas do CNPq (ex.: `Ciência da Computação`, `Probabilidade e Estatística`) e `Não informado`. |
+| `Região (Formação)` | Região da instituição de titulação [NT]. | `Centro-Oeste`, `Nordeste`, `Norte`, `Sudeste`, `Sul`, `Não informado`. |
+| `UF (Formação)` | Unidade da Federação da instituição de titulação [NT]. | **Nome do estado por extenso** (ex.: `São Paulo`), não a sigla, e `Não informado`. |
+| `Grande Área (Atuação)` | Grande área da área indicada como **principal** no módulo Áreas de Atuação do currículo [NT]. Pode divergir da formação [NT]. | Os mesmos valores de Formação e também `Serviço Social` (limitação 12). |
+| `Área (Atuação)` | Área de atuação principal declarada [NT]. | Nomes da Árvore (ex.: `Ciência da Computação`) e `Não informado`. |
+| `Região (Atuação)` | Região da instituição de atuação, que é a do vínculo vigente [NT]. | `Centro-Oeste`, `Nordeste`, `Norte`, `Sudeste`, `Sul`, `Não informado`. |
+| `UF (Atuação)` | Unidade da Federação da instituição de atuação [NT]. | Nome do estado por extenso e `Não informado`. |
+| `Setor de Atividade (Atuação)` | Setor da instituição principal de atuação, pela classificação do Manual Frascati da OCDE [NT]. | `Ensino Superior`, `Ensino Técnico/Prof. e de 2º Grau`, `Setor Empresarial`, `Setor Exterior`, `Setor Governamental`, `Setor Privado sem Fins Lucrativos`, `Não informado`. |
+| `Enquadramento (Atuação)` | Enquadramento funcional no vínculo principal. Campo aberto, agrupado pelo CNPq [NT]. | Dezenas de categorias agrupadas (ex.: `Professor`, `Pesquisador`, `Analista`, `Bolsista`), além de `Outro` e `Não informado`. |
+| `Bolsista - PQ` | Já recebeu bolsa de Produtividade em Pesquisa do CNPq (histórico) [NT]. | `Sim`, `Não`. O pipeline também aceita vazio como "não", para compatibilidade com arquivos antigos. |
+| `Bolsista - DT` | Já recebeu bolsa de Produtividade em Desenvolvimento Tecnológico e Extensão Inovadora (histórico) [NT]. | `Sim`, `Não`. |
+| `Totalpessoas` | **Controle.** Número de pessoas com a combinação de atributos da linha. | Inteiro positivo. |
+| `Data Extração BD Lattes` | **Controle.** Data da extração. No CSV exportado vem no formato mês/dia/ano: `10/4/2026` é 4 de outubro de 2026, confirmado pelo extrato do workbook, que guarda o campo como data [WB]. | `10/4/2026` em todos os registros. |
 
-| Indicador | Explicação | Fórmula | Variáveis utilizadas | Agregação | Limitação |
-| --- | --- | --- | --- | --- | --- |
-| **Razão de gênero (M:F) em bolsas PQ por nível** | Detalha a desigualdade dentro dos níveis hierárquicos da bolsa PQ (1A, 1B, 1C, 1D, 2/1E). Pode revelar que a sub-representação é ainda mais severa nos níveis superiores. | `# Bolsista-PQ-Nível = X e Sexo = "Masculino" / # Bolsista-PQ-Nível = X e Sexo = "Feminino"` | `Sexo`, `Bolsista - PQ 1A/1B/1C/1D/2 ou 1E`, `Ano` | Por nível PQ e ano | Cada nível é variável separada; requer unpivot dos dados. |
-| **Participação feminina em bolsas DT por nível** | Análogo ao PQ, mas para bolsas de Desenvolvimento Tecnológico. Avalia presença feminina em inovação aplicada vs. pesquisa acadêmica pura. | `(# Sexo = "Feminino" e Bolsista-DT-Nível = X) / (# Bolsista-DT-Nível = X) × 100` | `Sexo`, `Bolsista - DT 1A/1B/1C/1D/2 ou 1E`, `Ano` | Por nível DT e ano | Volumes pequenos por nível podem tornar percentuais instáveis. |
-| **Interseccionalidade gênero × raça em STEM** | Proporção de mulheres de cada grupo racial/cor em áreas STEM. Revela desigualdades compostas — a sub-representação é diferente para mulheres negras, brancas, indígenas, etc. | `(# Sexo = "Feminino" e Cor = C e Área ∈ STEM) / (# Área ∈ STEM e Sexo = "Feminino") × 100` | `Sexo`, `Cor ou Raça`, `Área (Formação)`, `Ano` | Por grupo racial, área e ano | Alta taxa de "Não desejo declarar" pode subestimar grupos minorizados. |
-| **Participação feminina por UF (nível estado)** | Granularidade estadual para a distribuição geográfica, permitindo identificar estados com desempenho destacado ou deficiente além da análise por região. | `(# Sexo = "Feminino" e UF = U) / (# UF = U e Sexo declarado) × 100` | `Sexo`, `UF (Atuação)`, `Ano` | Por UF e ano | UFs com poucos registros produzem percentuais instáveis (denominador pequeno). |
-| **Participação feminina por setor de atividade** | Proporção de mulheres em cada setor (Ensino Superior, Setor Empresarial, Setor Governamental, Exterior). Indica se a sub-representação difere entre academia e mercado. | `(# Sexo = "Feminino" e Setor = S) / (# Setor = S e Sexo declarado) × 100` | `Sexo`, `Setor de Atividade (Atuação)`, `Ano` | Por setor e ano | Não distingue porte ou natureza dentro de cada setor (ex.: empresas grandes vs. pequenas). |
-| **Participação feminina por enquadramento (cargo)** | Proporção de mulheres em cada tipo de enquadramento (Professor, Pesquisador, Pós-doutorando, etc.). Permite verificar se há concentração feminina em posições de menor prestígio ou estabilidade. | `(# Sexo = "Feminino" e Enquadramento = E) / (# Enquadramento = E e Sexo declarado) × 100` | `Sexo`, `Enquadramento (Atuação)`, `Ano` | Por enquadramento e ano | Nomenclatura de cargos pode variar entre instituições sob o mesmo enquadramento CNPq. |
-| **Taxa de crescimento anual de pesquisadoras** | Variação percentual no número absoluto de registros femininos ano a ano. Indica aceleração ou desaceleração do ingresso de mulheres na pós-graduação. | `(# Feminino Ano t - # Feminino Ano t-1) / # Feminino Ano t-1 × 100` | `Sexo`, `Ano` | Por ano (série temporal) | Afetado pela variação no volume total da base a cada extrato anual. |
-| **Participação feminina em formação vs. atuação (gap)** | Diferença entre a proporção de mulheres formadas em uma área e a proporção que atua nessa mesma área profissionalmente. Mede retenção ou evasão feminina do campo. | `% Feminino (Formação, Área X) − % Feminino (Atuação, Área X)` | `Sexo`, `Área (Formação)`, `Área (Atuação)`, `Ano` | Por área e ano | Requer que `Área (Formação)` e `Área (Atuação)` usem nomenclatura compatível. |
-| **Concentração regional de formação vs. atuação** | Compara onde as pesquisadoras se formaram vs. onde atuam, por região. Indica fluxos migratórios da força de trabalho científica feminina. | Diferença de distribuição regional entre `Região (Formação)` e `Região (Atuação)` para Sexo = "Feminino" | `Sexo`, `Região (Formação)`, `Região (Atuação)`, `Ano` | Por par de regiões e ano | Registro único não informa se a pesquisadora migrou; pode ser formação anterior à atuação. |
+### 3.2 Variáveis dos brutos fora do consolidado
 
----
+Os brutos trazem também `País de Nascimento`, `País`, `Cidade` e `Instituição` (de formação e de atuação) e as bolsas de iniciação científica, graduação sanduíche, mestrado, doutorado e pós-doutorado, além dos níveis de PQ e DT (1A, 1B, 1C, 1D e 2) [NT]. As bolsas de doutorado e pós-doutorado incluem concessões no país e no exterior [NT]. As colunas de bolsa são lidas dos brutos só para o relatório de qualidade.
 
-## 4. Nota sobre o Arquivo de 2026
-
-O extrato de 2026 possui **22.424 registros e 16 MB**, enquanto anos completos anteriores têm entre 58.584 e 79.937 registros e 42–57 MB. A proporção é de aproximadamente 1:3, sugerindo que o arquivo representa apenas parte do ano (extrato parcial).
-
-No pipeline atual, 2026 é **excluído da consolidação** (lista `ANOS` em `consolidar_lattes.py`), por isso o consolidado tem 415.920 registros (2020–2025).
-
-**Recomendação** caso 2026 volte a ser incorporado:
-
-- Excluir 2026 de qualquer comparação de **volume absoluto** entre anos.
-- Utilizar 2026 apenas para indicadores de **proporção/percentual**.
-- Acrescentar nota metodológica explícita sempre que 2026 aparecer em gráficos ou tabelas.
-- Verificar a data de extração contida na variável `Data Extração BD Lattes` para confirmar a janela de coleta.
+O workbook tem ainda campos que não estão na aba de download, como faixa etária (grupos de 5 anos no padrão do IBGE [NT]), vínculo, regime de trabalho e natureza da atividade [WB].
 
 ---
 
-## 5. Link para Acesso à Fonte de Dados
+## 4. Matriz de Indicadores
 
-| Recurso | URL |
+### 4.1 Regras gerais
+
+- **Contagem:** numerador e denominador são somas de `Totalpessoas` (pessoas). A saída traz também o número de linhas de cada um, para auditoria.
+- **Sexo declarado:** os denominadores consideram só Feminino e Masculino. Nos indicadores com recorte de sexo, "Todos" é Feminino + Masculino.
+- **Raça declarada:** "Não desejo declarar" sai dos denominadores dos indicadores raciais, e a taxa de não declaração é publicada como indicador próprio, por ano e sexo.
+- **"Não informado"** em grande área ou região de atuação sai das categorias e dos denominadores. As taxas de "Não informado" vão para o relatório de qualidade (`qualidade_v1.csv`), que serve à metodologia e não é publicado.
+- **STEM:** Grande Área ∈ {`Ciências Exatas e da Terra`, `Engenharias`}, tanto na formação quanto na atuação. "Tecnologias" fica fora.
+- **Categoria Negra:** soma de Preta e Parda (convenção do IBGE), publicada como linha adicional e marcada como agregada (`raca_agregada`). É opcional (`config.AGREGAR_NEGRA`, ligada por padrão até confirmação). Ligada ou desligada, o resto da saída é idêntico. Ela nunca entra em somas junto com os grupos desagregados.
+- **Flags de amostra pequena** (colunas separadas, para o front decidir como exibir):
+  - `flag_denominador_pequeno`: denominador menor que 30, nos indicadores de participação e na taxa de não declaração;
+  - `flag_numerador_pequeno`: numerador menor que 10, na composição racial das mulheres. Com poucas pessoas, variações entre anos parecem grandes mesmo que o percentual seja preciso;
+  - `flag_preferir_agregado`: valores anuais do grupo Indígena, cujo número principal é o agregado 2020 a 2025.
+
+### 4.2 Indicadores implementados na V1
+
+**Indicadores de base**
+
+| Indicador | Base | Recortes | Fórmula | Limitação principal |
+| --- | --- | --- | --- | --- |
+| **Participação feminina geral** | Por ano de titulação | Todas as áreas | `pessoas Feminino / pessoas com sexo declarado × 100` | Limitações 1, 3 e 9. |
+| **Participação feminina em STEM (formação)** | Por ano de titulação | Grande Área (Formação) ∈ STEM | `pessoas Feminino em STEM / pessoas em STEM com sexo declarado × 100` | Limitações 12 e 13. Na extração de referência, o agregado 2020 a 2025 é 34,66%. |
+| **Participação feminina por nível de formação** | Por ano de titulação | Mestrado, Mestrado Profissional, Doutorado | `pessoas Feminino no nível X / pessoas no nível X com sexo declarado × 100` | Limitação 4 (encolhimento das coortes de mestrado). |
+| **Participação feminina por grande área de formação** | Por ano de titulação | Cada grande área de formação, exceto "Não informado" | `pessoas Feminino na grande área X / pessoas na grande área X com sexo declarado × 100` | Grandes áreas não captam a heterogeneidade interna. |
+| **Participação feminina em STEM (atuação)** | Situação em out/2026 das pessoas tituladas de 2020 a 2025 | Grande Área (Atuação) ∈ STEM | `pessoas Feminino com atuação STEM / pessoas com atuação STEM e sexo declarado × 100` | Limitações 6 e 10: quem não tem grande área de atuação informada fica fora. |
+| **Participação feminina na atuação em Computação** | Situação em out/2026 das pessoas tituladas de 2020 a 2025 | `Área (Atuação)` = `Ciência da Computação` | `pessoas Feminino com atuação em Computação / pessoas com atuação em Computação e sexo declarado × 100` | Área de atuação principal declarada [NT]. Subespecialidades de computação não existem como área separada. |
+| **Participação feminina na atuação em Computação por região** | Situação em out/2026 das pessoas tituladas de 2020 a 2025 | Região (Atuação), exceto "Não informado" | `pessoas Feminino com atuação em Computação na região R / pessoas com atuação em Computação na região R e sexo declarado × 100` | Cobre só pessoas com vínculo de atuação registrado (limitação 10). |
+
+**Indicadores do recorte de raça** (interseccionalidade gênero × raça), aplicados à participação geral, à de STEM (formação e atuação) e à de nível de formação. Os dois primeiros não podem ser confundidos:
+
+| Indicador | O que responde | Numerador | Denominador | Flag |
+| --- | --- | --- | --- | --- |
+| **Participação feminina dentro do grupo racial** (`participacao_feminina_no_grupo_racial`) | Entre as pessoas do grupo racial R, qual % é mulher? | mulheres da raça R | pessoas da raça R com sexo declarado | denominador < 30 |
+| **Composição racial das mulheres** (`composicao_racial_das_mulheres`) | Entre as mulheres, qual % é do grupo racial R? | mulheres da raça R | mulheres com raça declarada | numerador < 10 |
+| **Taxa de não declaração de raça** (`taxa_nao_declaracao_raca`) | Qual % não declarou raça? | pessoas com "Não desejo declarar" | pessoas com sexo declarado (no sexo indicado) | denominador < 30 |
+
+Grupos raciais: Branca, Parda, Preta, Amarela, Indígena e, se ligada, Negra (Preta + Parda).
+
+Correções em relação à fórmula de interseccionalidade da versão anterior: o recorte STEM passa a usar **Grande Área**, de acordo com a definição oficial de STEM, e o denominador da composição **exclui "Não desejo declarar"**, de acordo com a regra dos demais indicadores. O indicador passou de "sugerido" a "implementado".
+
+### 4.3 Indicadores fora da V1, com motivo
+
+| Indicador | Situação na versão anterior | Motivo |
+| --- | --- | --- |
+| **Proporção de mulheres entre bolsistas PQ** | Implementado | Volume muito baixo: 351 pessoas tituladas de 2020 a 2025 já receberam PQ, das quais 76 mulheres, e o recorte racial ficaria quase todo abaixo dos limites de amostra. PQ é bolsa de meio e fim de carreira, então as pessoas tituladas de 2020 a 2025 que já receberam PQ são uma fatia atípica dos bolsistas. As bolsas são histórico (limitação 14). |
+| **Razão de gênero em PQ por nível; participação feminina em DT por nível** | Sugeridos | Mesmos motivos. DT tem volume ainda menor: 68 pessoas, das quais 21 mulheres. |
+| **Participação feminina por setor de atividade** | Sugerido | Setor "Não informado" para 47,07% das pessoas (limitação 11). "Não informado" pode indicar desemprego ou currículo desatualizado [NT], então a exclusão não é neutra. |
+| **Participação feminina por enquadramento** | Sugerido | Enquadramento "Não informado" para 23,11%, e o campo é aberto e agrupado pelo CNPq [NT], com uma categoria "Outro" grande. |
+| **Participação feminina por UF** | Sugerido | Não priorizado na V1. A UF vem por extenso; para o front, será criada uma coluna derivada com a sigla quando o indicador entrar. |
+| **Taxa de crescimento anual de pesquisadoras** | Sugerido | Com `Ano` = ano de titulação, coortes de uma única extração e coortes de mestrado que encolhem (limitações 1, 4 e 5), a variação entre anos mistura entrada na pós-graduação, atraso de atualização e progressão para o doutorado. |
+| **Gap formação × atuação; concentração regional de formação × atuação** | Sugeridos | A completude da atuação é muito menor que a da formação (limitação 10). Exigem restringir aos registros com os dois lados informados. |
+
+### 4.4 Propostas para a V2
+
+| Proposta | Condições e riscos |
 | --- | --- |
-| **Painel Formação e Atuação Lattes — fonte efetivamente utilizada** | [http://bi.cnpq.br/painel/formacao-atuacao-lattes/](http://bi.cnpq.br/painel/formacao-atuacao-lattes/) |
+| **Ampliar a série para coortes anteriores a 2020** (o painel cobre de 1948 ao ano atual [NT]). Basta mudar `config.ANOS`. | Viés de sobrevivência: o universo só tem currículos atualizados nos últimos 60 meses [NT], então as coortes antigas só contêm quem continua ativo no Lattes (quem saiu da carreira, se aposentou ou faleceu tende a sumir). As coortes antigas de mestrado ficam só com quem não fez doutorado (limitação 4). A não declaração de raça deve ser maior nas coortes antigas, o que piora a comparabilidade do recorte racial. |
+| **Bolsas PQ e DT sobre todas as coortes**, com níveis (1A a 2). | Depende da ampliação da série. Tratar como "já recebeu" (limitação 14). |
+| **Participação feminina por UF**, com coluna `uf_sigla`. | UFs pequenas exigem as mesmas flags de amostra. |
+| **Gap formação × atuação e fluxos regionais**, restritos a quem tem os dois lados informados. | Limitação 10. |
+| **Setor e enquadramento**, se o preenchimento melhorar em extrações futuras. | Limitação 11. |
 
-## 6. Limitações
+### 4.5 Formato de saída
 
-- A definição de STEM afeta diretamente o indicador de gênero: adotar "Grande Área ∈ {Ciências Exatas e da Terra, Engenharias}" eleva a participação feminina medida de 26,9% para 34,7% (formação), pois a lista anterior concentrava
-as subáreas mais masculinizadas. Reportar o indicador desagregado por grande área/área, além do agregado.
-- Assimetria de completude: Grande Área (Atuação) tem 17,4% de "Não informado" (72 mil reg.) vs. 5,6% em Formação. Comparações formação × atuação devem restringir-se a registros com ambas preenchidas, ou trazer ressalva.
-- Grande Área e Área são autodeclaradas de forma semi-independente e não aninham perfeitamente (~2% dos registros STEM com área incompatível ou não informada).
-- Áreas STEM emergentes (Robótica/Mecatrônica, Microeletrônica) são classificadas em "Outra" pelo CNPq e ficam fora; a grande área "Tecnologias" existe mas é desprezível (3 reg.).
+Os indicadores ficam em `data/processed/indicadores/indicadores_v1.csv`, em formato longo, com as colunas `indicador`, `base`, `periodo`, `recorte`, `categoria`, `sexo`, `raca`, `raca_agregada`, `numerador`, `denominador`, `percentual` (0 a 100, duas casas), `n_linhas_numerador`, `n_linhas_denominador`, `flag_denominador_pequeno`, `flag_numerador_pequeno`, `flag_preferir_agregado` e `extracao`.
+
+Acompanham a saída:
+- `indicadores_dicionario.csv`: nome, descrição, numerador, denominador, flag recomendada e ressalva de cada indicador, base e recorte. As ressalvas com números são montadas a partir do relatório de qualidade.
+- `indicadores_v1.meta.json`: extração, anos, categoria Negra ligada ou não, limites das flags e SHA-256 do consolidado.
+- `qualidade_v1.csv`: taxas de "Não informado", sexo não declarado, distribuição de raça nesse grupo, distribuição das grandes áreas e bolsas já recebidas.
+
+---
+
+## 5. Nota sobre 2026
+
+A coorte de titulação de 2026 tem 45.434 pessoas na extração de referência, contra 78.130 em 2025. **2026 fica fora da V1, inclusive dos percentuais.**
+
+O motivo não é mais "extrato parcial": todos os anos vêm da mesma extração. A coorte de 2026 é incompleta porque só contém títulos obtidos até a data da extração (4/10/2026) e registrados no currículo até então. O atraso de atualização do Lattes não é aleatório (limitação 5), e por isso a coorte incompleta enviesa até as proporções, não só os volumes.
+
+O arquivo de 2026 continua sendo baixado e guardado com os demais. Para incluí-lo numa versão futura, basta acrescentá-lo a `config.ANOS`, de preferência com uma extração feita depois do fim do ano.
+
+---
+
+## 6. Processo de download e reprodutibilidade
+
+1. `python scripts/baixar_lattes.py --anos 2020-2026` baixa a exportação CSV da aba "Painel - Download" do workbook, um ano por vez, com pausa entre anos e retentativas. O filtro de nível é passado vazio para trazer os três níveis, porque a view vem pré-filtrada.
+2. Cada arquivo é validado (codificação, separador, colunas obrigatórias, um único ano, uma única data de extração, `Totalpessoas` inteiro positivo) e guardado como veio em `data/raw/{data_extracao}/lattes_{ano}.csv`.
+3. O `manifest.json` de cada extração registra, por ano: URL, data e hora do download, tamanho, SHA-256, linhas, pessoas e a data de extração original.
+4. Se a automação falhar, o script mostra como baixar à mão pelo painel. Os arquivos manuais, nos dois formatos aceitos, vão para `data/raw/_entrada/` e são validados e organizados da mesma forma.
+5. `python scripts/consolidar_lattes.py` confere o SHA-256 de cada bruto contra o manifest e gera o consolidado. `python scripts/gerar_indicadores.py` gera os indicadores, o dicionário, o meta e o relatório de qualidade.
+6. Testes: `pytest` (unitários), `pytest -m dados` (contagens contra `tests/referencias/2026-10-04.json`, domínios das categorias e identidades entre indicadores) e `pytest -m rede` (acesso ao painel e à exportação).
+
+---
+
+## 7. Fontes
+
+| Recurso | Referência |
+| --- | --- |
+| Painel Formação e Atuação Lattes | [http://bi.cnpq.br/painel/formacao-atuacao-lattes/](http://bi.cnpq.br/painel/formacao-atuacao-lattes/) |
+| Workbook no Tableau Public [WB] | `https://public.tableau.com/views/PainelLattes-FormaoeAtuao/` (aba "Painel - Download") |
+| Nota Técnica 01/2024 [NT] | [nota_tecnica_painel_lattes.pdf](nota_tecnica_painel_lattes.pdf) |
+| Código do pipeline | `scripts/` e `src/lattes/` deste repositório. Parâmetros em `src/lattes/config.py`. |
+| Versão anterior desta metodologia | [historico/metodologia_lattes_2026-07.md](historico/metodologia_lattes_2026-07.md) |
