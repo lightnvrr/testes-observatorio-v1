@@ -26,6 +26,12 @@ PASTA_ENTRADA_MANUAL = PASTA_RAW / "_entrada"
 ARQUIVO_CONSOLIDADO = PASTA_PROCESSED / "lattes_consolidado.csv"
 NOME_MANIFEST = "manifest.json"
 
+# Saídas da etapa de indicadores (consumidas pelo front e pela metodologia)
+ARQUIVO_INDICADORES = PASTA_INDICADORES / "indicadores_v1.csv"
+ARQUIVO_DICIONARIO = PASTA_INDICADORES / "indicadores_dicionario.csv"
+ARQUIVO_INDICADORES_META = PASTA_INDICADORES / "indicadores_v1.meta.json"
+ARQUIVO_QUALIDADE = PASTA_INDICADORES / "qualidade_v1.csv"
+
 
 def pasta_extracao(data_extracao_iso: str) -> Path:
     """Pasta dos brutos de uma extração, ex.: data/raw/2026-10-04/."""
@@ -125,4 +131,36 @@ COLUNAS_OBRIGATORIAS_BRUTO = COLUNAS_CONSOLIDADAS
 
 # ── Definição de STEM ────────────────────────────────────────────────────────
 # STEM é definido por Grande Área (não por lista de áreas específicas).
+# "Tecnologias" fica fora: não existe na Árvore do Conhecimento do CNPq.
 GRANDES_AREAS_STEM = frozenset({"Ciências Exatas e da Terra", "Engenharias"})
+
+# Área específica do recorte de Computação (situação atual).
+AREA_COMPUTACAO = "Ciência da Computação"
+
+# ── Categorias (conferidas contra os valores distintos reais da base) ────────
+FEMININO = "Feminino"
+MASCULINO = "Masculino"
+SEXOS_DECLARADOS = (FEMININO, MASCULINO)
+SEXO_NAO_DECLARADO = "Não declarado"
+
+RACAS_DECLARADAS = ["Branca", "Parda", "Preta", "Amarela", "Indígena"]
+RACA_NAO_DECLARADA = "Não desejo declarar"
+
+# "Não informado" em campos de formação e atuação. Sai dos denominadores e
+# a taxa vai para o relatório de qualidade.
+NAO_INFORMADO = "Não informado"
+
+# ── Regras do recorte de raça ────────────────────────────────────────────────
+# Categoria Negra = Preta + Parda (convenção do IBGE). Ligada por padrão até
+# confirmação com a professora; desligada, as linhas "Negra" somem e o resto
+# da saída fica idêntico.
+AGREGAR_NEGRA = True
+GRUPOS_RACIAIS_AGREGADOS = {"Negra": ("Preta", "Parda")}
+
+# Raças cujo número principal é o agregado do período: as linhas anuais saem
+# com flag_preferir_agregado.
+RACAS_PREFERIR_AGREGADO = frozenset({"Indígena"})
+
+# Limites das flags de amostra pequena (parâmetros de exibição, não resultados).
+LIMITE_DENOMINADOR = 30
+LIMITE_NUMERADOR = 10

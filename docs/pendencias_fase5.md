@@ -43,12 +43,14 @@ Fontes citadas:
 
 - **Formação × Atuação:** Atuação é a área indicada como **principal** no módulo Áreas de Atuação do CV; pode divergir da formação (ex.: formação em Humanas, atuação em Saúde) [NT].
 - **Área de formação** vem da tabela de programas da CAPES; sem programa CAPES, usa o campo livre do CV, que não é obrigatório ("Não informado") [NT].
-- **Grande Área:** "Não informado" = dado indisponível; "Outra" = divergente da Árvore do Conhecimento; **"Tecnologias" não existe na Árvore do CNPq** e abarca sobretudo especialidades próximas das Engenharias [NT]. No consolidado: 40 pessoas em Atuação (29 em "Tecnologia da Informação e Comunicação"; 8 mulheres) e 2 em Formação. Decisão da usuária sobre incluir no STEM de atuação.
+- **Grande Área:** "Não informado" = dado indisponível; "Outra" = divergente da Árvore do Conhecimento; **"Tecnologias" não existe na Árvore do CNPq** e abarca sobretudo especialidades próximas das Engenharias [NT]. No consolidado: 40 pessoas em Atuação (29 em "Tecnologia da Informação e Comunicação"; 8 mulheres) e 2 em Formação. **Decidido: "Tecnologias" fica fora do STEM** (formação e atuação). Registrar como limitação conhecida, com esses volumes.
 - **Instituição de atuação** = vínculo vigente (início preenchido, fim em branco), com precedência: dedicação exclusiva/integral, maior carga horária, vínculo formal, início mais recente. **"Não informado" pode indicar desemprego ou CV desatualizado** [NT]. Vale também para Região/UF/Setor de atuação, que derivam da instituição.
 - **Enquadramento funcional** é campo aberto, agrupado pelo CNPq a partir dos termos digitados [NT]. Categorias podem misturar situações distintas.
 - **Setor de atividade** segue a classificação do **Manual Frascati (OCDE)** [NT].
 - **Instituições** (formação e atuação) podem vir de texto livre, com erros de grafia e variações [NT].
 - **Sexo:** a [NT] lista só "feminino" e "masculino", mas o consolidado tem **"Não declarado" em 4.119 pessoas (0,96%)**, crescendo nas coortes recentes (378 em 2020; 918 em 2025). Documentar o valor e manter a exclusão do denominador.
+- **Nota de qualidade (sexo "Não declarado"):** nesse grupo, "Preta" é a maior categoria de raça (1.475 de 4.119 pessoas, 35,8%, contra 8,5% na base toda), e "Não desejo declarar" chega a 22,9% (5,8% na base). Junto com o crescimento do grupo nas coortes recentes, sugere problema de preenchimento ou de codificação, não um retrato real. Sem tratamento no pipeline: os indicadores raciais exigem sexo declarado, então esse grupo não entra neles. Entra só na taxa de não declaração de raça da população total, com ressalva.
+- **Pergunta para o CNPq:** como surge `Sexo = "Não declarado"`, se o campo do CV só oferece feminino e masculino [NT]? Por que, nesse grupo, "Preta" é a cor/raça mais frequente? O grupo cresce nas coortes recentes por alguma mudança no formulário ou na extração?
 - **Cor ou raça:** opções amarela, branca, indígena, parda, preta e "não desejo declarar" [NT], iguais às do consolidado.
 
 ## Bolsas (limitação 6 reescrita)
@@ -69,6 +71,15 @@ Fontes citadas:
 - Bolsas: valores "Sim"/"Não" (não "Sim"/vazio). O código aceita vazio também.
 - Campos que existem no extrato [WB] mas não na aba de download: faixa etária (grupos de 5 anos, padrão IBGE [NT]), vínculo, regime de trabalho, natureza da atividade.
 
+## Escopo da V1 (Fase 3)
+
+- **Setor e enquadramento ficam fora da V1** (estavam como sugeridos). Motivo: em 2020 a 2025, 47,1% das pessoas têm Setor "Não informado" e, em Enquadramento, 23,1% são "Não informado" e cerca de 27% são "Outro"; pela [NT], "Não informado" pode ser desemprego ou CV desatualizado (não aleatório).
+- `Enquadramento (Atuação)` tem 31 valores no consolidado (a doc lista 7). Corrigir o dicionário.
+- **Relatório de qualidade** (`data/processed/indicadores/qualidade_v1.csv`, para a metodologia, não para o público): taxas de "Não informado" por campo, sexo e período; sexo "Não declarado" por período; distribuição de raça no grupo de sexo não declarado comparada à do sexo declarado. Levar uma tabela-resumo dele para a seção de limitações.
+- Taxas de "Não informado" na extração 2026-10-04 (2020 a 2025, F + M): Grande Área (Atuação) 17,50%, Grande Área (Formação) 5,55%. Ficaram muito perto dos valores antigos da doc (17,4% e 5,6%), apesar da mudança de universo e unidade.
+- Diferença por sexo no "Não informado" (2020 a 2025): Grande Área (Atuação) 18,3% F × 16,4% M (formados em STEM: 21,0% × 18,3%); Região (Atuação) em Computação 23,1% F × 24,1% M. Ressalva curta no dicionário para STEM atuação e Computação por região (números gerados a partir do relatório de qualidade).
+- Computação por região: só pessoas com vínculo de atuação registrado; "Não informado" fora do denominador (regra D).
+
 ## Regras de denominador
 
 - "Não informado" em Região, UF e Setor sai do denominador; a taxa de não informado vira indicador próprio (mesma regra de raça).
@@ -82,4 +93,6 @@ Fontes citadas:
    - provável aumento de "Não desejo declarar" em raça nas coortes antigas (campo de preenchimento posterior), o que pioraria a comparabilidade do recorte racial.
 3. Indicadores de situação atual passaram a ser um perfil de início de carreira (tituladas de 2020 a 2025, situação em out/2026).
 4. 2026 fora da V1 (coorte incompleta com atraso de atualização não aleatório).
-5. Agregação Negra = Preta + Parda (pendente, Fase 3.2).
+5. Agregação Negra = Preta + Parda: implementada como opção (`config.AGREGAR_NEGRA`, ligada por padrão). Confirmar se entra.
+6. Setor e enquadramento fora da V1 (qualidade do preenchimento).
+7. Regras de amostra pequena: denominador < 30 (participação no grupo racial), numerador < 10 (composição racial das mulheres), Indígena pelo agregado 2020 a 2025.

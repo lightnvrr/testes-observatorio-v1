@@ -18,9 +18,17 @@ No VS Code, selecione o interpretador `.venv` (Ctrl+Shift+P, "Python: Select Int
 python scripts/baixar_lattes.py --anos 2020-2026   # brutos em data/raw/ + manifest.json
 python scripts/consolidar_lattes.py                # data/processed/lattes_consolidado.csv
 python scripts/gerar_indicadores.py                # data/processed/indicadores/
+python scripts/gerar_indicadores.py --sem-negra    # sem a categoria Negra (Preta + Parda)
 ```
 
-> Os scripts de consolidação e indicadores ainda estão em construção.
+### Saídas dos indicadores
+
+Em `data/processed/indicadores/`:
+
+- `indicadores_v1.csv`: formato longo, uma linha por indicador × base × período × recorte × categoria × sexo × raça, com numerador, denominador, percentual (0 a 100), linhas de auditoria e as flags `flag_denominador_pequeno`, `flag_numerador_pequeno` e `flag_preferir_agregado`.
+- `indicadores_dicionario.csv`: nomes, definições e ressalvas de cada indicador, base temporal e recorte (para os rótulos do front).
+- `indicadores_v1.meta.json`: extração, parâmetros (categoria Negra, limites das flags) e SHA-256 do consolidado.
+- `qualidade_v1.csv`: taxas de "Não informado" e notas de qualidade, para a metodologia (não é para o público).
 
 ### Download dos brutos
 
