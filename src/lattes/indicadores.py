@@ -52,6 +52,10 @@ COLUNAS_SAIDA = [
     "flag_denominador_pequeno", "flag_numerador_pequeno", "flag_preferir_agregado", "extracao",
 ]
 
+# Colunas que identificam uma linha de indicadores_v1.csv de forma única,
+# dentro de uma extração. Ao juntar extrações, acrescentar "extracao".
+CHAVE_INDICADORES = ["indicador", "base", "periodo", "recorte", "categoria", "sexo", "raca"]
+
 COLUNAS_QUALIDADE = [
     "verificacao", "campo", "recorte", "periodo", "sexo", "categoria",
     "numerador", "denominador", "percentual",

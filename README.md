@@ -2,6 +2,38 @@
 
 Pipeline que baixa, consolida e gera indicadores da base Lattes (Painel Formação e Atuação Lattes, CNPq) para o observatório. A metodologia completa está em [docs/metodologia_lattes.md](docs/metodologia_lattes.md).
 
+**Status: V1 fechada** (tag `v1.0-lattes`), extração de referência de 4/10/2026, coortes de titulação de 2020 a 2025. Este repositório é o ambiente de testes da base Lattes; a integração ao observatório está descrita em [docs/integracao_observatorio.md](docs/integracao_observatorio.md).
+
+Documentos:
+- [docs/metodologia_lattes.md](docs/metodologia_lattes.md): metodologia V1.
+- [docs/registro_decisoes_v1.md](docs/registro_decisoes_v1.md): decisões aprovadas.
+- [docs/integracao_observatorio.md](docs/integracao_observatorio.md): contrato de dados e regras de exibição.
+- [docs/perguntas_cnpq.md](docs/perguntas_cnpq.md): perguntas em aberto ao CNPq.
+- [docs/numeros_metodologia_v1.md](docs/numeros_metodologia_v1.md): origem de cada número da metodologia.
+- [CHANGELOG.md](CHANGELOG.md).
+
+## Como reproduzir a V1
+
+A V1 usa a **extração de 4/10/2026** (`config.EXTRACAO = "2026-10-04"`).
+
+> **Atenção:** o painel do CNPq só serve a extração mais recente e muda todo mês. Rodar o download hoje traz outra extração, não a da V1. Para reproduzir a V1, é preciso ter a pasta `data/raw/2026-10-04/` (os brutos e o `manifest.json`) guardada **fora do repositório**, porque `data/` não vai para o git.
+
+1. Instale o ambiente (seção abaixo).
+2. Copie a pasta guardada para `data/raw/2026-10-04/`. O consolidador confere o SHA-256 de cada bruto contra o manifest e para se algo não bater.
+3. Rode, nesta ordem:
+
+```powershell
+python scripts/consolidar_lattes.py
+python scripts/gerar_indicadores.py
+pytest
+pytest -m dados
+pytest -m rede
+```
+
+O `pytest -m dados` confere as contagens contra `tests/referencias/2026-10-04.json`, os domínios das categorias, as identidades entre indicadores e os números citados na metodologia. Rodando do zero, os CSVs gerados são idênticos byte a byte aos da V1.
+
+Para começar uma extração nova em vez de reproduzir a V1, veja a seção "Atualização" de [docs/integracao_observatorio.md](docs/integracao_observatorio.md).
+
 ## Instalação (Windows, PowerShell)
 
 ```powershell

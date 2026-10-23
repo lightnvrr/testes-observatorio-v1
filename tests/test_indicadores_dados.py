@@ -89,3 +89,9 @@ def test_taxa_todos_e_feminino_mais_masculino(com_negra):
 def test_situacao_atual_so_no_agregado(com_negra):
     situacao = com_negra[com_negra.base == ind.BASE_SITUACAO]
     assert set(situacao.periodo) == {ind.rotulo_agregado(config.ANOS)}
+
+
+def test_chave_unica_sem_duplicatas(com_negra):
+    duplicadas = com_negra[com_negra.duplicated(ind.CHAVE_INDICADORES, keep=False)]
+    assert duplicadas.empty, duplicadas[ind.CHAVE_INDICADORES].head()
+    assert set(com_negra.extracao) == {config.EXTRACAO}

@@ -118,3 +118,20 @@ def ler_consolidado(caminho: Path = config.ARQUIVO_CONSOLIDADO) -> pd.DataFrame:
         dtype=str,
         keep_default_na=False,
     )
+
+
+def ler_bolsas(pasta_extracao: Path, anos: list[int]) -> pd.DataFrame:
+    """Colunas de bolsa dos brutos (fora do consolidado), para o relatório de qualidade.
+
+    Confere o SHA-256 de cada bruto contra o manifest, como na consolidação.
+    """
+    manifest = ler_manifest(pasta_extracao).get("anos", {})
+    colunas = [config.COLUNA_ANO, config.COLUNA_NIVEL, "Sexo", config.COLUNA_PESSOAS,
+               *config.COLUNAS_BOLSAS_QUALIDADE]
+    partes = []
+    for ano in anos:
+        caminho = pasta_extracao / f"lattes_{ano}.csv"
+        if manifest.get(str(ano), {}).get("sha256") != sha256(caminho):
+            raise ErroConsolidacao(f"{caminho.name}: SHA-256 não confere com o manifest.")
+        partes.append(ler_bruto(caminho, colunas=colunas))
+    return pd.concat(partes, ignore_index=True)

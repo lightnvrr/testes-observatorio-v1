@@ -163,9 +163,10 @@ COLUNAS_BOLSAS_QUALIDADE = [
 NAO_INFORMADO = "Não informado"
 
 # ── Regras do recorte de raça ────────────────────────────────────────────────
-# Categoria Negra = Preta + Parda (convenção do IBGE). Ligada por padrão até
-# confirmação com a professora; desligada, as linhas "Negra" somem e o resto
-# da saída fica idêntico.
+# Categoria Negra = Preta + Parda (convenção do IBGE), publicada ao lado das
+# categorias desagregadas. Decisão da V1 (registro_decisoes_v1.md, item 5).
+# A opção continua desligável para análises: desligada, as linhas "Negra"
+# somem e o resto da saída fica idêntico.
 AGREGAR_NEGRA = True
 GRUPOS_RACIAIS_AGREGADOS = {"Negra": ("Preta", "Parda")}
 

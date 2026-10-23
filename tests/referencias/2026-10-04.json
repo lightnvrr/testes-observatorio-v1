@@ -1,12 +1,13 @@
 {
   "data_extracao": "2026-10-04",
   "data_extracao_original": "10/4/2026",
-  "conferido_por": null,
+  "conferido_por": "Jamily Barbosa de Oliveira",
+  "conferido_em": "2026-10-23",
   "notas": [
-    "Gerado na Fase 1 e a conferir pela responsável; preencher conferido_por depois.",
+    "Contagens e domínios conferidos contra o painel por Jamily Barbosa de Oliveira em 2026-10-23.",
     "n_pessoas: soma de TOTALPESSOAS por ANOOBTENCAOTITULO no extrato .hyper da fonte de download do workbook PainelLattes-FormaoeAtuao (Tableau Public, publicado em 2026-10-09). Fonte independente do CSV.",
     "n_linhas: linhas do CSV exportado pela aba Painel - Download. Depende das colunas da view.",
-    "dominios: valores distintos do consolidado 2020 a 2025 desta extração (gerado na Fase 4, a conferir)."
+    "dominios: valores distintos do consolidado 2020 a 2025 desta extração."
   ],
   "anos": {
     "2020": {

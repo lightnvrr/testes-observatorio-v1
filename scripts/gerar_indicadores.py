@@ -15,28 +15,10 @@ import argparse
 import json
 import sys
 
-import pandas as pd
-
 from lattes import config
-from lattes.consolidacao import ler_consolidado
-from lattes.download import agora_iso, ler_manifest, sha256
-from lattes.leitura import ler_bruto
+from lattes.consolidacao import ler_bolsas, ler_consolidado
+from lattes.download import agora_iso, sha256
 from lattes.indicadores import ErroDominio, gerar_dicionario, gerar_indicadores, gerar_qualidade
-
-
-def ler_bolsas(extracao: str) -> pd.DataFrame:
-    """Colunas de bolsa dos brutos (não estão no consolidado), para o relatório de qualidade."""
-    pasta = config.pasta_extracao(extracao)
-    manifest = ler_manifest(pasta)
-    colunas = [config.COLUNA_ANO, config.COLUNA_NIVEL, "Sexo", config.COLUNA_PESSOAS,
-               *config.COLUNAS_BOLSAS_QUALIDADE]
-    partes = []
-    for ano in config.ANOS:
-        caminho = config.caminho_bruto(ano, extracao)
-        if manifest.get("anos", {}).get(str(ano), {}).get("sha256") != sha256(caminho):
-            raise ValueError(f"{caminho.name}: SHA-256 não confere com o manifest.")
-        partes.append(ler_bruto(caminho, colunas=colunas))
-    return pd.concat(partes, ignore_index=True)
 
 
 def main() -> int:
@@ -61,7 +43,7 @@ def main() -> int:
     except ErroDominio as e:
         print(f"[ERRO] {e}", file=sys.stderr)
         return 1
-    qualidade = gerar_qualidade(df, config.ANOS, bolsas=ler_bolsas(extracao))
+    qualidade = gerar_qualidade(df, config.ANOS, bolsas=ler_bolsas(config.pasta_extracao(extracao), config.ANOS))
     dicionario = gerar_dicionario(qualidade, extracao, config.ANOS)
 
     config.PASTA_INDICADORES.mkdir(parents=True, exist_ok=True)

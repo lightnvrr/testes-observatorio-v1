@@ -30,3 +30,29 @@ def test_definicao_stem_por_grande_area():
 
 def test_url_do_painel_e_http():
     assert config.URL_PAINEL.startswith("http://")
+
+
+# ── Decisões da V1 (docs/registro_decisoes_v1.md) ────────────────────────────
+
+def test_decisao_extracao_de_referencia():
+    assert config.EXTRACAO == "2026-10-04"
+
+
+def test_decisao_2026_fora_da_v1():
+    assert 2026 not in config.ANOS
+    assert 2026 in config.ANOS_DISPONIVEIS  # continua sendo baixado
+
+
+def test_decisao_categoria_negra_publicada():
+    assert config.AGREGAR_NEGRA is True
+    assert config.GRUPOS_RACIAIS_AGREGADOS == {"Negra": ("Preta", "Parda")}
+
+
+def test_decisao_tecnologias_fora_do_stem():
+    assert "Tecnologias" not in config.GRANDES_AREAS_STEM
+
+
+def test_decisao_regras_de_amostra_pequena():
+    assert config.LIMITE_DENOMINADOR == 30
+    assert config.LIMITE_NUMERADOR == 10
+    assert config.RACAS_PREFERIR_AGREGADO == {"Indígena"}

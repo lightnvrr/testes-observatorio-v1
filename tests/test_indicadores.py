@@ -263,3 +263,11 @@ def test_dicionario_monta_ressalvas_com_os_dados():
     assert d.loc[ind.BASE_SITUACAO, "nome"] == "Situação em out/2026 das pessoas tituladas de 2023 a 2024"
     assert "vínculo de atuação registrado" in d.loc["computacao_regiao_atuacao", "descricao"]
     assert set(d.index) >= {ind.PARTICIPACAO, ind.GRUPO_RACIAL, ind.COMPOSICAO, ind.TAXA_ND_RACA}
+
+
+# ── Contrato de dados ────────────────────────────────────────────────────────
+
+def test_chave_unica_sem_duplicatas(saida):
+    assert not saida.duplicated(ind.CHAVE_INDICADORES).any()
+    assert list(saida.columns) == ind.COLUNAS_SAIDA
+    assert set(ind.CHAVE_INDICADORES) <= set(ind.COLUNAS_SAIDA)
