@@ -1,0 +1,111 @@
+area,grande_area,classificacao,justificativa,cod_correspondente,codigo_area_cnpq
+Agronomia,Ciências Agrárias,STEM,"Agronomia, incluída no critério da Evellyn (agrônomos e afins).",2132,5.01.00.00-9
+Ciência e Tecnologia de Alimentos,Ciências Agrárias,STEM,"Ciência agrária aplicada, afim à agronomia e à engenharia química.",2132; 2145,5.07.00.00-6
+Engenharia Agrícola,Ciências Agrárias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2149,5.03.00.00-8
+Recursos Florestais e Engenharia Florestal,Ciências Agrárias,STEM,Ciência agrária afim à agronomia (agrônomos e afins).,2132,5.02.00.00-3
+Recursos Pesqueiros e Engenharia de Pesca,Ciências Agrárias,STEM,Ciência agrária afim à agronomia (agrônomos e afins).,2132,5.06.00.00-1
+Zootecnia,Ciências Agrárias,STEM,Ciência agrária afim à agronomia (agrônomos e afins).,2132,5.04.00.00-2
+Biofísica,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.09.00.00-7
+Biologia Geral,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.01.00.00-0
+Bioquímica,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.08.00.00-2
+Biotecnologia,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.14.00.00-8
+Botânica,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.03.00.00-0
+Ecologia,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.05.00.00-9
+Farmacologia,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.10.00.00-0
+Fisiologia,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.07.00.00-8
+Genética,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.02.00.00-5
+Imunologia,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.11.00.00-4
+Microbiologia,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.12.00.00-9
+Morfologia,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.06.00.00-3
+Parasitologia,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.13.00.00-3
+Zoologia,Ciências Biológicas,STEM,"Ciências biológicas, incluídas no critério da Evellyn.",2131,2.04.00.00-4
+Astronomia,Ciências Exatas e da Terra,STEM,"Astronomia, incluída no critério da Evellyn.",2111,1.04.00.00-1
+Ciência da Computação,Ciências Exatas e da Terra,STEM,"Computação e TIC, incluídas no critério da Evellyn.",2511 a 2529,1.03.00.00-7
+Física,Ciências Exatas e da Terra,STEM,"Ciências físicas, incluídas no critério da Evellyn.",2111,1.05.00.00-6
+Geociências,Ciências Exatas e da Terra,STEM,"Geociências e meteorologia, incluídas no critério da Evellyn.",2112; 2114,1.07.00.00-5
+Matemática,Ciências Exatas e da Terra,STEM,"Matemática, incluída no critério da Evellyn.",2120,1.01.00.00-8
+Oceanografia,Ciências Exatas e da Terra,STEM,"Ciência da Terra (oceanografia física, química e geológica), dentro de geociências.",2114,1.08.00.00-0
+Probabilidade e Estatística,Ciências Exatas e da Terra,STEM,"Estatística, incluída no critério da Evellyn.",2120,1.02.00.00-2
+Química,Ciências Exatas e da Terra,STEM,"Ciências químicas, incluídas no critério da Evellyn.",2113,1.06.00.00-0
+Engenharia Aeroespacial,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2144,3.12.00.00-1
+Engenharia Biomédica,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2149,3.13.00.00-6
+Engenharia Civil,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2142,3.01.00.00-3
+Engenharia Elétrica,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2151; 2152; 2153,3.04.00.00-7
+Engenharia Mecânica,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2144,3.05.00.00-1
+Engenharia Naval e Oceânica,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2144,3.11.00.00-7
+Engenharia Nuclear,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2149,3.09.00.00-0
+Engenharia Química,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2145,3.06.00.00-6
+Engenharia Sanitária,Engenharias,STEM,"Engenharia ambiental, que na COD entra (2143), ao contrário da proteção do meio ambiente (2133).",2143,3.07.00.00-0
+Engenharia de Energia,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2149,3.14.00.00-0
+Engenharia de Materiais e Metalúrgica,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2146,3.03.00.00-2
+Engenharia de Minas,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2146,3.02.00.00-8
+Engenharia de Produção,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2141,3.08.00.00-5
+Engenharia de Transportes,Engenharias,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn; na COD, engenheiros de trânsito ficam em 2164 (subgrupo 216, fora da lista).",2142; ou 2164 (fora da lista),3.10.00.00-2
+Ciências Atuarias,Outra,STEM,Atuária está no mesmo grupo de base de matemáticos e estatísticos.,2120,sem código
+Engenharia Cartografica,Outra,STEM,"Caso ambíguo decidido como STEM: é engenharia no Brasil, embora na COD cartógrafos fiquem no subgrupo 216 (2165), fora da lista da Evellyn.",2165 (fora da lista),sem código
+Engenharia Mecatrônica,Outra,STEM,"Engenharia, e todas as engenharias entram no critério da Evellyn.",2144; 2152,sem código
+Fontes Alternativas de Energia,Outra,STEM,"Engenharia de energia; fora da Árvore, mas pelo conteúdo é engenharia.",2149,sem código
+Microeletrônica,Outra,STEM,"Engenharia eletrônica; o CNPq a põe em Outra, mas pelo conteúdo é engenharia.",2152,9.33.00.00-0
+Química Industrial,Outra,STEM,"Química aplicada à indústria, dentro de ciências químicas.",2113,sem código
+"Robótica, Mecatrônica e Automação",Outra,STEM,"Engenharia mecatrônica e de automação; o CNPq a põe em Outra, mas pelo conteúdo é engenharia.",2144; 2152,9.32.00.00-5
+Nanotecnologia e Novos Materiais,Tecnologias,STEM,"Ciência e engenharia de materiais; fora da Árvore, mas pelo conteúdo é STEM.",2113; 2146,sem código
+Tecnologia da Informação e Comunicação,Tecnologias,STEM,"Computação e TIC; o CNPq a põe em Tecnologias, mas pelo conteúdo é TIC.",2511 a 2529,sem código
+Demografia,Ciências Sociais Aplicadas,ambígua,"Pendente: no CNPq é Ciências Sociais Aplicadas (excluída); na COD, 2120 (Matemáticos, atuários e estatísticos) não cita demógrafos, e o arquivo da COD não tem notas de inclusão.",2120 ou 2632 (a confirmar),6.06.00.00-4
+Medicina Veterinária,Ciências Agrárias,não STEM,"Caso ambíguo decidido como não STEM: na COD, veterinários ficam em profissionais da saúde (2250), que a Evellyn exclui.","2250 (saúde, fora da lista)",5.05.00.00-7
+Antropologia,Ciências Humanas,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,7.03.00.00-3
+Arqueologia,Ciências Humanas,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,7.04.00.00-8
+Ciência Política,Ciências Humanas,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,7.09.00.00-0
+Educação,Ciências Humanas,não STEM,"Área de ensino, excluído no critério da Evellyn.",sem correspondência na lista STEM,7.08.00.00-6
+Filosofia,Ciências Humanas,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,7.01.00.00-4
+Geografia,Ciências Humanas,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,7.06.00.00-7
+História,Ciências Humanas,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,7.05.00.00-2
+Psicologia,Ciências Humanas,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,7.07.00.00-1
+Sociologia,Ciências Humanas,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,7.02.00.00-9
+Teologia,Ciências Humanas,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,7.10.00.00-3
+Administração,Ciências Sociais Aplicadas,não STEM,"Área de administração, excluída no critério da Evellyn.",sem correspondência na lista STEM,6.02.00.00-6
+Arquitetura e Urbanismo,Ciências Sociais Aplicadas,não STEM,"Área de arquitetura, urbanismo e design, cujo subgrupo (216) não está na lista da Evellyn.",sem correspondência na lista STEM,6.04.00.00-5
+Ciência da Informação,Ciências Sociais Aplicadas,não STEM,"Área de comunicação, informação e cultura, fora dos grupos STEM da Evellyn.",sem correspondência na lista STEM,6.07.00.00-9
+Ciências Contábeis,Ciências Sociais Aplicadas,não STEM,"Área de administração, excluída no critério da Evellyn.",sem correspondência na lista STEM,6.02.04.00-1 (subárea)
+Comunicação,Ciências Sociais Aplicadas,não STEM,"Área de comunicação, informação e cultura, fora dos grupos STEM da Evellyn.",sem correspondência na lista STEM,6.09.00.00-8
+Desenho Industrial,Ciências Sociais Aplicadas,não STEM,"Área de arquitetura, urbanismo e design, cujo subgrupo (216) não está na lista da Evellyn.",sem correspondência na lista STEM,6.12.00.00-0
+Direito,Ciências Sociais Aplicadas,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,6.01.00.00-1
+Economia,Ciências Sociais Aplicadas,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,6.03.00.00-0
+Economia Doméstica,Ciências Sociais Aplicadas,não STEM,"Área de administração, excluída no critério da Evellyn.",sem correspondência na lista STEM,6.11.00.00-5
+Museologia,Ciências Sociais Aplicadas,não STEM,"Área de comunicação, informação e cultura, fora dos grupos STEM da Evellyn.",sem correspondência na lista STEM,6.08.00.00-3
+Planejamento Urbano e Regional,Ciências Sociais Aplicadas,não STEM,"Área de arquitetura, urbanismo e design, cujo subgrupo (216) não está na lista da Evellyn.",sem correspondência na lista STEM,6.05.00.00-0
+Serviço Social,Ciências Sociais Aplicadas,não STEM,"Área de serviços sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,6.10.00.00-0
+Turismo,Ciências Sociais Aplicadas,não STEM,"Área de administração, excluída no critério da Evellyn.",sem correspondência na lista STEM,6.13.00.00-4
+Educação Física,Ciências da Saúde,não STEM,"Área de saúde, excluída no critério da Evellyn.",sem correspondência na lista STEM,4.09.00.00-2
+Enfermagem,Ciências da Saúde,não STEM,"Área de saúde, excluída no critério da Evellyn.",sem correspondência na lista STEM,4.04.00.00-0
+Farmácia,Ciências da Saúde,não STEM,"Área de saúde, excluída no critério da Evellyn.",sem correspondência na lista STEM,4.03.00.00-5
+Fisioterapia e Terapia Ocupacional,Ciências da Saúde,não STEM,"Área de saúde, excluída no critério da Evellyn.",sem correspondência na lista STEM,4.08.00.00-8
+Fonoaudiologia,Ciências da Saúde,não STEM,"Área de saúde, excluída no critério da Evellyn.",sem correspondência na lista STEM,4.07.00.00-3
+Medicina,Ciências da Saúde,não STEM,"Área de saúde, excluída no critério da Evellyn.",sem correspondência na lista STEM,4.01.00.00-6
+Nutrição,Ciências da Saúde,não STEM,"Área de saúde, excluída no critério da Evellyn.",sem correspondência na lista STEM,4.05.00.00-4
+Odontologia,Ciências da Saúde,não STEM,"Área de saúde, excluída no critério da Evellyn.",sem correspondência na lista STEM,4.02.00.00-0
+Saúde Coletiva,Ciências da Saúde,não STEM,"Área de saúde, excluída no critério da Evellyn.",sem correspondência na lista STEM,4.06.00.00-9
+Artes,"Lingüística, Letras e Artes",não STEM,"Área de comunicação, informação e cultura, fora dos grupos STEM da Evellyn.",sem correspondência na lista STEM,8.03.00.00-6
+Letras,"Lingüística, Letras e Artes",não STEM,"Área de comunicação, informação e cultura, fora dos grupos STEM da Evellyn.",sem correspondência na lista STEM,8.02.00.00-1
+Lingüística,"Lingüística, Letras e Artes",não STEM,"Área de comunicação, informação e cultura, fora dos grupos STEM da Evellyn.",sem correspondência na lista STEM,8.01.00.00-7
+Administração Hospitalar,Outra,não STEM,"Área de saúde, excluída no critério da Evellyn.",sem correspondência na lista STEM,sem código
+Administração Rural,Outra,não STEM,"Área de administração, excluída no critério da Evellyn.",sem correspondência na lista STEM,sem código
+Biomedicina,Outra,não STEM,"Caso ambíguo decidido como não STEM: no Brasil é profissão de saúde, que a Evellyn exclui.",sem correspondência na lista STEM,sem código
+Bioética,Outra,não STEM,"Área de saúde, excluída no critério da Evellyn.",sem correspondência na lista STEM,9.26.00.00-0
+Carreira Militar,Outra,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,sem código
+Carreira Religiosa,Outra,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,sem código
+Ciências,Outra,não STEM,"Caso ambíguo decidido como não STEM: nome genérico, que pode ser ensino de ciências (ensino é excluído).",sem correspondência,sem código
+Ciências Ambientais,Outra,não STEM,"Caso ambíguo decidido como não STEM: equivalente à proteção do meio ambiente (2133), que a Evellyn exclui.",2133 (excluído),9.27.00.00-4
+Ciências Sociais,Outra,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,sem código
+Defesa,Outra,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,9.24.00.00-0
+Divulgação Científica,Outra,não STEM,"Área de comunicação, informação e cultura, fora dos grupos STEM da Evellyn.",sem correspondência na lista STEM,9.28.00.00-9
+Multidisciplinar,Outra,não STEM,"Caso ambíguo decidido como não STEM: área de avaliação interdisciplinar sem disciplina definida, cujo conteúdo não pode ser verificado.",sem correspondência,9.99.00.00-9
+Relações Internacionais,Outra,não STEM,"Área de direito e ciências sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,sem código
+Relações Públicas,Outra,não STEM,"Área de comunicação, informação e cultura, fora dos grupos STEM da Evellyn.",sem correspondência na lista STEM,sem código
+Secretariado Executivo,Outra,não STEM,"Área de administração, excluída no critério da Evellyn.",sem correspondência na lista STEM,9.23.00.00-6
+Segurança Contra Incêndio,Outra,não STEM,"Caso ambíguo decidido como não STEM: pode ser atividade de segurança e defesa civil, sem correspondência na lista.",sem correspondência na lista STEM,9.34.00.00-4
+Tecnologia e Inovação,Outra,não STEM,"Caso ambíguo decidido como não STEM: nome genérico, que pode ser gestão da inovação (administração é excluída).",sem correspondência,sem código
+Serviço Social Aplicado,Serviço Social,não STEM,"Área de serviços sociais, excluídos no critério da Evellyn.",sem correspondência na lista STEM,6.10.02.00-3 (subárea)
+Meio Ambiente e Sustentabilidade,Tecnologias,não STEM,"Caso ambíguo decidido como não STEM, seguindo Ciências Ambientais (2133, excluído).",2133 (excluído),sem código
+Tecnologias Sociais e Educacionais,Tecnologias,não STEM,"Área de ensino, excluído no critério da Evellyn.",sem correspondência na lista STEM,sem código
+Tecnologias para o Desenvolvimento Sustentável,Tecnologias,não STEM,"Caso ambíguo decidido como não STEM, seguindo Ciências Ambientais (2133, excluído).",2133 (excluído),sem código
+Não informado,Não informado,não informado,Sem área: aplica-se a regra por Grande Área (só quando todas as áreas da grande área têm a mesma classificação).,sem correspondência,sem código
